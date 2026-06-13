@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import HTMLFlipBook from 'react-pageflip';
 import { PawButton } from '../ui/PawButton';
 import { usePawPoints } from '../../context/PawPointsContext';
@@ -44,6 +44,30 @@ export const JournalBook: React.FC = () => {
   const [entry, setEntry] = useState("");
   const [isSaving, setIsSaving] = useState(false);
   const { refreshUserData } = usePawPoints();
+  const inputAreaRef = useRef<HTMLDivElement>(null);
+
+  // React synthetic events bubble too late (at the root) for react-pageflip's native listeners.
+  // We must use a native DOM listener to stop propagation immediately.
+  useEffect(() => {
+    const el = inputAreaRef.current;
+    if (!el) return;
+
+    const stopEvent = (e: Event) => {
+      e.stopPropagation();
+    };
+
+    el.addEventListener('pointerdown', stopEvent);
+    el.addEventListener('mousedown', stopEvent);
+    el.addEventListener('touchstart', stopEvent);
+    el.addEventListener('wheel', stopEvent); // also stop scroll from flipping page if any
+
+    return () => {
+      el.removeEventListener('pointerdown', stopEvent);
+      el.removeEventListener('mousedown', stopEvent);
+      el.removeEventListener('touchstart', stopEvent);
+      el.removeEventListener('wheel', stopEvent);
+    };
+  }, []);
 
   const handleSave = async () => {
     if (!entry.trim()) return;
@@ -133,29 +157,31 @@ export const JournalBook: React.FC = () => {
         </Page>
         <Page number={2}>
           <h2 style={{ color: '#5c4e4e', marginBottom: '1rem' }}>Dear PawPal...</h2>
-          <textarea 
-            style={{
-              width: '100%',
-              height: '300px',
-              border: 'none',
-              outline: 'none',
-              background: 'transparent',
-              resize: 'none',
-              fontSize: '1.1rem',
-              lineHeight: '32px', // Match gradient lines
-              fontFamily: "'Nunito', sans-serif",
-              color: '#3b3131',
-              backgroundImage: 'repeating-linear-gradient(transparent, transparent 31px, #d5c8b5 31px, #d5c8b5 32px)',
-              paddingTop: '6px'
-            }}
-            placeholder="Write whatever is on your mind. It's completely anonymous and safe here..."
-            value={entry}
-            onChange={(e) => setEntry(e.target.value)}
-          />
-          <div style={{ display: 'flex', justifyContent: 'flex-end', marginTop: '1rem' }}>
-            <PawButton onClick={handleSave} disabled={isSaving}>
-              {isSaving ? "Saving..." : "Save 🐾"}
-            </PawButton>
+          <div ref={inputAreaRef} style={{ width: '100%', height: '100%', display: 'flex', flexDirection: 'column' }}>
+            <textarea 
+              style={{
+                width: '100%',
+                flex: 1,
+                border: 'none',
+                outline: 'none',
+                background: 'transparent',
+                resize: 'none',
+                fontSize: '1.1rem',
+                lineHeight: '32px', // Match gradient lines
+                fontFamily: "'Nunito', sans-serif",
+                color: '#3b3131',
+                backgroundImage: 'repeating-linear-gradient(transparent, transparent 31px, #d5c8b5 31px, #d5c8b5 32px)',
+                paddingTop: '6px'
+              }}
+              placeholder="Write whatever is on your mind. It's completely anonymous and safe here..."
+              value={entry}
+              onChange={(e) => setEntry(e.target.value)}
+            />
+            <div style={{ display: 'flex', justifyContent: 'flex-end', marginTop: '1rem' }}>
+              <PawButton onClick={handleSave} disabled={isSaving}>
+                {isSaving ? "Saving..." : "Save 🐾"}
+              </PawButton>
+            </div>
           </div>
         </Page>
       </HTMLFlipBook>
