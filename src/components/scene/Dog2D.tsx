@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { useSpring, animated, config } from '@react-spring/web';
+import { useSpring, animated, config, to } from '@react-spring/web';
 import { usePawPoints } from '../../context/PawPointsContext';
 
 interface DogProps {
@@ -121,7 +121,7 @@ export const Dog2D: React.FC<DogProps> = ({ expression = 'normal', action = 'tai
     <animated.div 
       style={{ 
         position: 'relative', width: '200px', height: '200px', cursor: 'pointer', marginTop: hasBed ? '20px' : '0', 
-        transform: bodyTranslateY.to((y) => `translateY(${y}px)`).to(t => bodyTranslateX.to(x => `${t} translateX(${x}px)`)).to(t => bodyRotateZ.to(rz => `${t} rotateZ(${rz}deg)`))
+        transform: to([bodyTranslateY, bodyTranslateX, bodyRotateZ], (y, x, rz) => `translateY(${y}px) translateX(${x}px) rotateZ(${rz}deg)`)
       }}
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
@@ -149,7 +149,7 @@ export const Dog2D: React.FC<DogProps> = ({ expression = 'normal', action = 'tai
         height: '120px',
         background: '#e0b896', // Light brown
         borderRadius: '50px 50px 20px 20px',
-        transform: scaleY.to(s => `scaleY(${s})`).to(t => bodyScaleY.to(bs => `${t} scaleY(${bs})`)),
+        transform: to([scaleY, bodyScaleY], (s, bs) => `scaleY(${s}) scaleY(${bs})`),
         transformOrigin: 'bottom center',
         boxShadow: '0 10px 20px rgba(0,0,0,0.1)'
       }}>
@@ -195,7 +195,7 @@ export const Dog2D: React.FC<DogProps> = ({ expression = 'normal', action = 'tai
         borderRadius: '60px',
         boxShadow: '0 5px 15px rgba(0,0,0,0.05)',
         transformOrigin: 'bottom center',
-        transform: rotateHead.to(r => `rotateZ(${r}deg)`).to(t => headTranslateY.to(y => `${t} translateY(${y}px)`)).to(t => headTranslateX.to(x => `${t} translateX(${x}px)`))
+        transform: to([rotateHead, headTranslateY, headTranslateX], (r, y, x) => `rotateZ(${r}deg) translateY(${y}px) translateX(${x}px)`)
       }}>
         {/* Left Ear */}
         <animated.div style={{
