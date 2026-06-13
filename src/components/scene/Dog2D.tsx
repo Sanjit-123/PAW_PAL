@@ -59,12 +59,21 @@ export const Dog2D: React.FC<DogProps> = ({ expression = 'normal', action = 'tai
     config: { tension: 300, friction: 10 },
   });
 
+
+  // Breathing animation
+  const isPanting = action === 'panting';
+  const { breathingScale } = useSpring({
+    from: { breathingScale: 1 },
+    to: { breathingScale: isPanting ? 1.04 : 1.015 },
+    loop: { reverse: true },
+    config: isPanting ? { tension: 300, friction: 10 } : { tension: 30, friction: 14 },
+  });
+
   // Body movements (Jump, Spin, Lie Down, Shiver, Panting)
   const isJumping = action === 'excited_jump';
   const isLieDown = action === 'lie_down';
-  const isShivering = action === 'shiver' || expression === 'anxious';
   const isSpinning = action === 'spin';
-  const isPanting = action === 'panting';
+  const isShivering = action === 'shiver' || expression === 'anxious';
 
   const { bodyTranslateY, bodyScaleY, bodyTranslateX, bodyRotateZ } = useSpring({
     bodyTranslateY: isJumping ? -30 : (isLieDown ? 20 : 0),
@@ -149,7 +158,7 @@ export const Dog2D: React.FC<DogProps> = ({ expression = 'normal', action = 'tai
         height: '120px',
         background: '#e0b896', // Light brown
         borderRadius: '50px 50px 20px 20px',
-        transform: to([scaleY, bodyScaleY], (s, bs) => `scaleY(${s}) scaleY(${bs})`),
+        transform: to([scaleY, bodyScaleY, breathingScale], (s, bs, br) => `scaleY(${s}) scaleY(${bs}) scaleX(${br}) scaleY(${br})`),
         transformOrigin: 'bottom center',
         boxShadow: '0 10px 20px rgba(0,0,0,0.1)'
       }}>

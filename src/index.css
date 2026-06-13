@@ -39,6 +39,17 @@ body {
   display: flex;
 }
 
+/* Layout Utilities */
+.main-content-area {
+  padding: 2rem;
+}
+
+@media (max-width: 768px) {
+  .main-content-area {
+    padding: 1rem 0.5rem;
+  }
+}
+
 /* Fur UI Utilities */
 .fur-card {
   background: var(--fur-bg);

@@ -20,24 +20,29 @@ export const Navbar: React.FC<NavbarProps> = ({ activeTab, onTabChange }) => {
   return (
     <nav style={{ 
       display: 'flex', 
-      justifyContent: 'center', 
+      justifyContent: 'flex-start', // allow scrolling from the left
       alignItems: 'center',
-      gap: '1rem', 
-      padding: '1.5rem 2rem',
+      padding: '1.5rem',
       position: 'sticky',
       top: 0,
       zIndex: 100,
-      backgroundColor: 'rgba(252, 249, 242, 0.9)', // Match var(--bg-color) with slight transparency
+      backgroundColor: 'rgba(252, 249, 242, 0.9)',
       backdropFilter: 'blur(10px)',
-      borderBottom: '1px solid rgba(92, 78, 78, 0.1)'
+      borderBottom: '1px solid rgba(92, 78, 78, 0.1)',
+      overflowX: 'auto',
+      WebkitOverflowScrolling: 'touch',
+      scrollbarWidth: 'none', // Hide scrollbar for Firefox
+      msOverflowStyle: 'none' // Hide scrollbar for IE/Edge
     }}>
-      <div style={{ display: 'flex', gap: '1rem' }}>
+      <style>{`nav::-webkit-scrollbar { display: none; }`}</style>
+      <div style={{ display: 'flex', gap: '1rem', margin: '0 auto' }}>
         {tabs.map(tab => (
           <button 
             key={tab.id}
             onClick={() => onTabChange(tab.id as TabType)}
             style={{
               display: 'flex', alignItems: 'center', gap: '0.5rem',
+              whiteSpace: 'nowrap',
               padding: '0.75rem 1.5rem', 
               border: 'none', 
               background: activeTab === tab.id ? 'var(--primary-color)' : 'transparent',

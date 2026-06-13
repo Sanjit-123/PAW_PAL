@@ -64,7 +64,7 @@ const Dashboard: React.FC = () => {
       <Navbar activeTab={activeTab} onTabChange={setActiveTab} />
 
       {/* Main Content Area */}
-      <div style={{ padding: '2rem', display: 'flex', justifyContent: 'center', width: '100%', maxWidth: '1200px', margin: '0 auto' }}>
+      <div className="main-content-area" style={{ display: 'flex', justifyContent: 'center', width: '100%', maxWidth: '1200px', margin: '0 auto' }}>
         {activeTab === 'companion' && (
           <div style={{ width: '100%', maxWidth: '600px' }}>
              <CompanionView />

@@ -42,7 +42,7 @@ export const ChatBot: React.FC = () => {
 
   const sendMessage = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!inputText.trim()) return;
+    if (!inputText.trim() || isTyping) return;
 
     const tempMsg: ChatMessage = {
       id: Date.now(),
