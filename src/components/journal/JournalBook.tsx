@@ -1,39 +1,6 @@
 import React, { useState } from 'react';
-import HTMLFlipBook from 'react-pageflip';
 import { PawButton } from '../ui/PawButton';
 import { usePawPoints } from '../../context/PawPointsContext';
-
-const Page = React.forwardRef<HTMLDivElement, { children: React.ReactNode; number: number }>((props, ref) => {
-  return (
-    <div ref={ref} className="page">
-      <div style={{
-        backgroundColor: '#fdf6e3', // Paper color
-        border: '1px solid #e0d6c8',
-        boxShadow: 'inset 0 0 20px rgba(0,0,0,0.05), 0 0 5px rgba(0,0,0,0.1)',
-        padding: '2rem',
-        height: '100%',
-        width: '100%',
-        position: 'relative',
-        overflow: 'hidden',
-      }}>
-      {/* Spine shadow for realistic book fold */}
-      <div style={{
-        position: 'absolute',
-        top: 0, bottom: 0, 
-        right: props.number % 2 === 0 ? 0 : 'auto', 
-        left: props.number % 2 !== 0 ? 0 : 'auto',
-        width: '50px',
-        background: props.number % 2 === 0 
-          ? 'linear-gradient(to right, transparent, rgba(0,0,0,0.15))' 
-          : 'linear-gradient(to left, transparent, rgba(0,0,0,0.15))',
-        zIndex: 10,
-        pointerEvents: 'none'
-      }} />
-        <div className="page-content">
-          {props.children}
-        </div>
-        <div style={{ position: 'absolute', bottom: '1rem', right: '1rem', color: '#ccc' }}>
-          {props.number}
 import './JournalBook.css';
 
 export const JournalBook: React.FC = () => {
