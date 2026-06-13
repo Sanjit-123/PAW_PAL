@@ -87,9 +87,9 @@ export const Dog2D: React.FC<DogProps> = ({ expression = 'normal', action = 'tai
   const isAnxious = expression === 'anxious';
 
   // Eyes
-  let eyeStyle: any = { height: '12px', borderRadius: '50%', top: '35px', background: '#333' };
+  let eyeStyle: any = { height: '12px', width: '12px', borderRadius: '50%', top: '35px', background: '#333' };
   if (isSleepy || isLoving) {
-    eyeStyle = { height: '4px', borderRadius: '2px', top: '40px', background: '#333' };
+    eyeStyle = { height: '4px', width: '12px', borderRadius: '2px', top: '40px', background: '#333' };
   } else if (isShocked || isExcited) {
     eyeStyle = { height: '18px', width: '18px', borderRadius: '50%', top: '32px', left: '27px', background: '#333' };
   } else if (isAnxious) {
