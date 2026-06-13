@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { FurCard } from '../ui/FurCard';
 import { usePawPoints } from '../../context/PawPointsContext';
-import { Send, Sparkles } from 'lucide-react';
+import { Send, PawPrint } from 'lucide-react';
 import { Dog2D } from '../scene/Dog2D';
 import { MiniGame } from './MiniGame';
 
