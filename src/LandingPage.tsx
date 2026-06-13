@@ -22,6 +22,7 @@ export const LandingPage: React.FC<LandingPageProps> = ({ onEnter }) => {
     <div 
       ref={containerRef}
       style={{
+        width: '100vw',
         height: '100vh',
         overflowY: 'auto',
         overflowX: 'hidden',
@@ -35,8 +36,8 @@ export const LandingPage: React.FC<LandingPageProps> = ({ onEnter }) => {
         scrollContainerRef={containerRef} 
       />
       
-      {/* Scrollable Content Container to drive the scrollbar (500vh gives plenty of scroll room) */}
-      <div style={{ height: '500vh', position: 'relative', zIndex: 10 }}>
+      {/* Scrollable Content Container to drive the scrollbar (800vh gives a slower, smoother scroll) */}
+      <div style={{ height: '800vh', position: 'relative', zIndex: 10 }}>
         
         {/* Intro Section - Top of Page */}
         <div style={{ height: '100vh', display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center', textAlign: 'center', padding: '2rem' }}>
@@ -72,7 +73,7 @@ export const LandingPage: React.FC<LandingPageProps> = ({ onEnter }) => {
         </div>
 
         {/* Final Section - Bottom of Page */}
-        <div style={{ height: '200vh', display: 'flex', flexDirection: 'column', justifyContent: 'flex-end', alignItems: 'center', paddingBottom: '15vh' }}>
+        <div style={{ height: '500vh', display: 'flex', flexDirection: 'column', justifyContent: 'flex-end', alignItems: 'center', paddingBottom: '15vh' }}>
           <div style={{ background: 'rgba(255,255,255,0.9)', backdropFilter: 'blur(20px)', padding: '3rem', borderRadius: '30px', textAlign: 'center', boxShadow: '0 20px 50px rgba(0,0,0,0.1)' }}>
             <h2 style={{ fontSize: '2.5rem', color: '#5c4e4e', marginBottom: '1rem' }}>Ready to meet your new friend?</h2>
             <PawButton onClick={onEnter} style={{ fontSize: '1.3rem', padding: '1rem 3rem' }}>
