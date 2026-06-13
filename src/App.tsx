@@ -9,6 +9,7 @@ import { Resources } from './components/analytics/Resources';
 import { Navbar } from './components/ui/Navbar';
 import type { TabType } from './components/ui/Navbar';
 import { Sparkles, Activity } from 'lucide-react';
+import { LandingPage } from './LandingPage';
 import './index.css';
 
 const CompanionView: React.FC = () => {
@@ -100,9 +101,15 @@ const Dashboard: React.FC = () => {
 };
 
 function App() {
+  const [hasEntered, setHasEntered] = useState(false);
+
   return (
     <PawPointsProvider>
-      <Dashboard />
+      {!hasEntered ? (
+        <LandingPage onEnter={() => setHasEntered(true)} />
+      ) : (
+        <Dashboard />
+      )}
     </PawPointsProvider>
   );
 }
