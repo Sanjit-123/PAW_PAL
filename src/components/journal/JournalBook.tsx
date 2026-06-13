@@ -34,11 +34,7 @@ const Page = React.forwardRef<HTMLDivElement, { children: React.ReactNode; numbe
         </div>
         <div style={{ position: 'absolute', bottom: '1rem', right: '1rem', color: '#ccc' }}>
           {props.number}
-        </div>
-      </div>
-    </div>
-  );
-});
+import './JournalBook.css';
 
 export const JournalBook: React.FC = () => {
   const [entry, setEntry] = useState("");
@@ -68,122 +64,48 @@ export const JournalBook: React.FC = () => {
   };
 
   return (
-    <div style={{ 
-      display: 'flex', 
-      justifyContent: 'center', 
-      marginTop: '2rem',
-      perspective: '1500px'
-    }}>
-      {/* Book Cover / Binding wrapper */}
-      <div style={{
-        backgroundColor: '#8b5a2b', // Leather brown
-        padding: '15px 10px',
-        borderRadius: '15px',
-        boxShadow: 'inset 4px 0 10px rgba(255,255,255,0.1), inset -4px 0 10px rgba(0,0,0,0.4), 0 20px 50px rgba(0,0,0,0.4)',
-        position: 'relative',
-        display: 'flex',
-        justifyContent: 'center',
-        minWidth: '900px' // Force cover to be wide enough for two pages
-      }}>
-        {/* Book Spine Center */}
-        <div style={{
-          position: 'absolute',
-          top: 0, bottom: 0, left: '50%',
-          width: '40px',
-          transform: 'translateX(-50%)',
-          background: 'linear-gradient(to right, rgba(0,0,0,0.4) 0%, rgba(255,255,255,0.1) 20%, rgba(0,0,0,0.2) 50%, rgba(255,255,255,0.1) 80%, rgba(0,0,0,0.4) 100%)',
-          zIndex: 0
-        }} />
-
-        {/* @ts-ignore - react-pageflip typings are occasionally problematic */}
-        <HTMLFlipBook 
-          width={450} 
-          height={550} 
-          size="stretch"
-          minWidth={400}
-          maxWidth={500}
-          minHeight={500}
-          maxHeight={650}
-          drawShadow={true}
-          showCover={false}
-          usePortrait={false}
-          useMouseEvents={false}
-          className="journal-book"
-          style={{ zIndex: 1 }}
-        >
-          {/* We only use the FlipBook as a visual background. The real inputs are overlaid. */}
-          <Page number={1}><div /></Page>
-          <Page number={2}><div /></Page>
-        </HTMLFlipBook>
-
-        {/* --- PERFECTLY SECURE INTERACTIVE OVERLAYS --- */}
-        {/* Left Page Overlay */}
-        <div style={{
-          position: 'absolute',
-          top: '15px', left: '10px',
-          width: '450px', height: '550px',
-          zIndex: 100, padding: '2rem',
-          pointerEvents: 'none'
-        }}>
-          <div style={{ pointerEvents: 'auto', height: '100%' }}>
-            <h2 style={{ color: '#5c4e4e', marginBottom: '1rem' }}>How are you feeling today?</h2>
-            <div style={{ display: 'flex', gap: '10px', flexWrap: 'wrap', marginBottom: '2rem' }}>
-              {['😊 Happy', '😌 Calm', '😔 Sad', '😰 Anxious', '😴 Tired'].map(mood => (
-                <div key={mood} style={{
-                  padding: '0.5rem 1rem',
-                  backgroundColor: '#ffd1dc',
-                  borderRadius: '20px',
-                  cursor: 'pointer',
-                  fontWeight: 'bold',
-                  color: '#5c4e4e'
-                }}>
-                  {mood}
-                </div>
-              ))}
-            </div>
-            <div style={{ opacity: 0.7, fontSize: '0.9rem' }}>
-              <p>🐾 Tip: Tracking your mood helps PawPal understand you better!</p>
-            </div>
+    <div className="journal-wrapper">
+      <div className="journal-cover">
+        <div className="journal-spine" />
+        
+        {/* Left Page */}
+        <div className="journal-page left">
+          <h2 style={{ color: '#5c4e4e', marginBottom: '1rem' }}>How are you feeling today?</h2>
+          
+          <div className="mood-grid">
+            {['😊 Happy', '😌 Calm', '😔 Sad', '😰 Anxious', '😴 Tired'].map(mood => (
+              <div key={mood} className="mood-chip">
+                {mood}
+              </div>
+            ))}
           </div>
+          
+          <div style={{ opacity: 0.7, fontSize: '0.9rem' }}>
+            <p>🐾 Tip: Tracking your mood helps PawPal understand you better!</p>
+          </div>
+          
+          <div className="page-number">1</div>
         </div>
 
-        {/* Right Page Overlay */}
-        <div style={{
-          position: 'absolute',
-          top: '15px', right: '10px',
-          width: '450px', height: '550px',
-          zIndex: 100, padding: '2rem',
-          pointerEvents: 'none'
-        }}>
-          <div style={{ pointerEvents: 'auto', height: '100%', display: 'flex', flexDirection: 'column' }}>
-            <h2 style={{ color: '#5c4e4e', marginBottom: '1rem' }}>Dear PawPal...</h2>
-            <textarea 
-              style={{
-                width: '100%',
-                flex: 1,
-                border: 'none',
-                outline: 'none',
-                background: 'transparent',
-                resize: 'none',
-                fontSize: '1.1rem',
-                lineHeight: '32px',
-                fontFamily: "'Nunito', sans-serif",
-                color: '#3b3131',
-                backgroundImage: 'repeating-linear-gradient(transparent, transparent 31px, #d5c8b5 31px, #d5c8b5 32px)',
-                paddingTop: '6px'
-              }}
-              placeholder="Write whatever is on your mind. It's completely anonymous and safe here..."
-              value={entry}
-              onChange={(e) => setEntry(e.target.value)}
-            />
-            <div style={{ display: 'flex', justifyContent: 'flex-end', marginTop: '1rem' }}>
-              <PawButton onClick={handleSave} disabled={isSaving}>
-                {isSaving ? "Saving..." : "Save 🐾"}
-              </PawButton>
-            </div>
+        {/* Right Page */}
+        <div className="journal-page right">
+          <h2 style={{ color: '#5c4e4e', marginBottom: '1rem' }}>Dear PawPal...</h2>
+          
+          <textarea 
+            className="journal-textarea"
+            placeholder="Write whatever is on your mind. It's completely anonymous and safe here..."
+            value={entry}
+            onChange={(e) => setEntry(e.target.value)}
+          />
+          
+          <div style={{ display: 'flex', justifyContent: 'flex-end', marginTop: '1rem' }}>
+            <PawButton onClick={handleSave} disabled={isSaving}>
+              {isSaving ? "Saving..." : "Save 🐾"}
+            </PawButton>
           </div>
+          
+          <div className="page-number">2</div>
         </div>
-
       </div>
     </div>
   );
