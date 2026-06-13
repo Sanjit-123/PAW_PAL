@@ -132,6 +132,7 @@ export const JournalBook: React.FC = () => {
           flippingTime={1000}
           showCover={false}
           usePortrait={false} // Force 2-page landscape mode
+          useMouseEvents={false} // Disables drag-to-flip so inputs work perfectly
           className="journal-book"
           style={{ zIndex: 1 }}
         >
