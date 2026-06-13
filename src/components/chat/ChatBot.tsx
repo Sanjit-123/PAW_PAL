@@ -94,14 +94,21 @@ export const ChatBot: React.FC = () => {
   const currentAction = gameAction || latestBotMsg?.action || 'tail_wag';
 
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', width: '100%', alignItems: 'center' }}>
+    <div style={{ position: 'relative', display: 'flex', flexDirection: 'column', width: '100%', paddingTop: '160px' }}>
       
-      {/* Centered Dynamic Companion */}
-      <div style={{ transform: 'scale(1.1)', marginBottom: '1rem', marginTop: '-10px', zIndex: 10 }}>
+      {/* Absolutely Centered Dynamic Companion */}
+      <div style={{ 
+        position: 'absolute', 
+        top: '0px', 
+        left: '50%', 
+        transform: 'translateX(-50%) scale(1.2)', 
+        zIndex: 50,
+        pointerEvents: 'auto'
+      }}>
         <Dog2D expression={currentExpression} action={currentAction} />
       </div>
 
-      <div style={{ display: 'flex', gap: '2rem', width: '100%', alignItems: 'flex-start' }}>
+      <div style={{ display: 'flex', gap: '2rem', width: '100%', alignItems: 'stretch' }}>
         
         {/* Left Column: Chat (Takes up most space) */}
         <div style={{ flex: 2, display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '1rem', width: '100%' }}>
