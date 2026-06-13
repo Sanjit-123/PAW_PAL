@@ -58,6 +58,7 @@ const Dashboard: React.FC = () => {
     <div className="dashboard-container" style={{
       display: 'flex',
       flexDirection: 'column',
+      alignItems: 'center',
       height: '100vh',
       overflowY: 'auto',
       backgroundColor: 'transparent',
