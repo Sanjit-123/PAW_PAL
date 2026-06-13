@@ -73,7 +73,7 @@ export const MiniGame: React.FC<MiniGameProps> = ({ onPlayAction }) => {
 
         <button 
           className="paw-button"
-          onClick={() => handleAction('tail_wag', 'loving', '💗', '+15 Bonding', '#feca57')}
+          onClick={() => handleAction('belly_rub', 'loving', '💗', '+15 Bonding', '#feca57')}
           style={{ width: '100%', display: 'flex', flexDirection: 'column', alignItems: 'flex-start', padding: '1rem', background: '#fae8eb', border: 'none', color: '#5c4e4e', transition: 'all 0.2s', borderRadius: '15px' }}
           onMouseOver={(e) => { e.currentTarget.style.transform = 'translateY(-3px)'; e.currentTarget.style.boxShadow = '0 6px 15px rgba(255, 182, 193, 0.6)'; e.currentTarget.style.filter = 'brightness(0.95)'; }}
           onMouseOut={(e) => { e.currentTarget.style.transform = 'translateY(0)'; e.currentTarget.style.boxShadow = 'none'; e.currentTarget.style.filter = 'brightness(1)'; }}

@@ -29,7 +29,8 @@ export const Dog2D: React.FC<DogProps> = ({ expression = 'normal', action = 'tai
   });
 
   // Tail wagging animation on hover or action
-  const isWagging = isHovered || action === 'tail_wag' || action === 'excited_jump';
+  const isBellyRub = action === 'belly_rub';
+  const isWagging = isHovered || action === 'tail_wag' || action === 'excited_jump' || isBellyRub;
   const { rotateZ } = useSpring({
     rotateZ: isWagging ? 20 : 0,
     loop: isWagging,
@@ -76,12 +77,12 @@ export const Dog2D: React.FC<DogProps> = ({ expression = 'normal', action = 'tai
   const isShivering = action === 'shiver' || expression === 'anxious';
 
   const { bodyTranslateY, bodyScaleY, bodyTranslateX, bodyRotateZ } = useSpring({
-    bodyTranslateY: isJumping ? -30 : (isLieDown ? 20 : 0),
-    bodyScaleY: isLieDown ? 0.7 : (isPanting ? 1.05 : 1),
-    bodyTranslateX: isShivering ? -3 : 0,
-    bodyRotateZ: isSpinning ? 360 : 0,
-    loop: isJumping || isShivering || isPanting ? { reverse: true } : (isSpinning ? true : false),
-    config: isShivering ? { tension: 800, friction: 10 } : (isPanting ? { tension: 500, friction: 15 } : config.wobbly),
+    bodyTranslateY: isJumping ? -30 : (isLieDown ? 20 : (isBellyRub ? 5 : 0)),
+    bodyScaleY: isLieDown ? 0.7 : (isPanting ? 1.05 : (isBellyRub ? 0.95 : 1)),
+    bodyTranslateX: isShivering ? -3 : (isBellyRub ? 8 : 0),
+    bodyRotateZ: isSpinning ? 360 : (isBellyRub ? 12 : 0),
+    loop: isJumping || isShivering || isPanting || isBellyRub ? { reverse: true } : (isSpinning ? true : false),
+    config: isShivering ? { tension: 800, friction: 10 } : (isBellyRub ? { tension: 500, friction: 5 } : config.wobbly),
   });
 
   // --- Expressions Styling ---
@@ -96,34 +97,34 @@ export const Dog2D: React.FC<DogProps> = ({ expression = 'normal', action = 'tai
   const isAnxious = expression === 'anxious';
 
   // Eyes
-  let eyeStyle: any = { height: '12px', width: '12px', borderRadius: '50%', top: '35px', background: '#333' };
+  let eyeStyle: any = { height: '16px', width: '16px', borderRadius: '50%', top: '35px', background: '#333' };
   if (isSleepy || isLoving) {
-    eyeStyle = { height: '4px', width: '12px', borderRadius: '2px', top: '40px', background: '#333' };
+    eyeStyle = { height: '6px', width: '16px', borderRadius: '3px', top: '40px', background: '#333' };
   } else if (isShocked || isExcited) {
-    eyeStyle = { height: '18px', width: '18px', borderRadius: '50%', top: '32px', background: '#333' };
+    eyeStyle = { height: '22px', width: '22px', borderRadius: '50%', top: '32px', background: '#333' };
   } else if (isAnxious) {
-    eyeStyle = { height: '10px', width: '10px', borderRadius: '50%', top: '36px', background: '#333' };
+    eyeStyle = { height: '12px', width: '12px', borderRadius: '50%', top: '36px', background: '#333' };
   }
 
   // Mouth
   let mouthContent = null;
-  let mouthStyle: any = { borderBottom: '3px solid #333', borderRadius: '0 0 15px 15px', height: '15px', top: '65px', width: '30px', left: '45px' }; // default smile
+  let mouthStyle: any = { borderBottom: '4px solid #333', borderRadius: '0 0 20px 20px', height: '18px', top: '65px', width: '34px', left: '43px' }; // default smile
   
   if (isSad) {
-    mouthStyle = { borderTop: '3px solid #333', borderBottom: 'none', borderRadius: '15px 15px 0 0', top: '70px', height: '15px', width: '30px', left: '45px' };
+    mouthStyle = { borderTop: '4px solid #333', borderBottom: 'none', borderRadius: '20px 20px 0 0', top: '70px', height: '15px', width: '30px', left: '45px' };
   } else if (isSleepy || isAngry) {
-    mouthStyle = { borderBottom: '3px solid #333', height: '0px', top: '70px', borderRadius: '0', width: '20px', left: '50px' };
+    mouthStyle = { borderBottom: '4px solid #333', height: '0px', top: '70px', borderRadius: '0', width: '24px', left: '48px' };
   } else if (isShocked) {
-    mouthStyle = { border: '3px solid #333', borderRadius: '50%', height: '12px', width: '12px', top: '70px', left: '54px' };
+    mouthStyle = { border: '4px solid #333', borderRadius: '50%', height: '16px', width: '16px', top: '70px', left: '52px' };
   } else if (isExcited || isPlayful) {
     // Open smile with tongue
-    mouthStyle = { borderBottom: '3px solid #333', borderRadius: '0 0 15px 15px', height: '15px', top: '65px', width: '30px', left: '45px', overflow: 'visible' };
+    mouthStyle = { borderBottom: '4px solid #333', borderRadius: '0 0 20px 20px', height: '18px', top: '65px', width: '34px', left: '43px', overflow: 'visible' };
     mouthContent = (
-      <div style={{ position: 'absolute', top: '12px', left: '10px', width: '10px', height: '15px', background: '#ff8a8a', borderRadius: '0 0 10px 10px' }} />
+      <div style={{ position: 'absolute', top: '14px', left: '12px', width: '12px', height: '16px', background: '#ff8a8a', borderRadius: '0 0 10px 10px' }} />
     );
   } else if (isConfused) {
     // angled straight mouth
-    mouthStyle = { borderBottom: '3px solid #333', height: '0px', top: '70px', borderRadius: '0', width: '20px', left: '50px', transform: 'rotate(-15deg)' };
+    mouthStyle = { borderBottom: '4px solid #333', height: '0px', top: '70px', borderRadius: '0', width: '24px', left: '48px', transform: 'rotate(-15deg)' };
   }
 
   return (
@@ -162,6 +163,18 @@ export const Dog2D: React.FC<DogProps> = ({ expression = 'normal', action = 'tai
         transformOrigin: 'bottom center',
         boxShadow: '0 10px 20px rgba(0,0,0,0.1)'
       }}>
+        {/* Soft Belly Patch */}
+        <div style={{
+          position: 'absolute',
+          bottom: '0',
+          left: '30px',
+          width: '90px',
+          height: '85px',
+          background: '#fff0e6',
+          borderRadius: '45px 45px 20px 20px',
+          boxShadow: 'inset 0 10px 15px rgba(0,0,0,0.02)'
+        }} />
+
         {/* Gamification Unlock: Red Collar */}
         {hasCollar && (
           <div style={{
@@ -233,8 +246,16 @@ export const Dog2D: React.FC<DogProps> = ({ expression = 'normal', action = 'tai
         }} />
 
         {/* Eyes */}
-        <animated.div style={{ position: 'absolute', left: '30px', ...eyeStyle }} />
-        <animated.div style={{ position: 'absolute', right: '30px', ...eyeStyle }} />
+        <animated.div style={{ position: 'absolute', left: '30px', ...eyeStyle }}>
+          {!(isSleepy || isLoving || isAnxious || isSad) && (
+            <div style={{ position: 'absolute', top: '15%', right: '20%', width: '35%', height: '35%', background: 'white', borderRadius: '50%' }} />
+          )}
+        </animated.div>
+        <animated.div style={{ position: 'absolute', right: '30px', ...eyeStyle }}>
+          {!(isSleepy || isLoving || isAnxious || isSad) && (
+            <div style={{ position: 'absolute', top: '15%', right: '20%', width: '35%', height: '35%', background: 'white', borderRadius: '50%' }} />
+          )}
+        </animated.div>
 
         {/* Eyebrows (for Angry) */}
         {isAngry && (

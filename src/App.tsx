@@ -55,13 +55,16 @@ const Dashboard: React.FC = () => {
   const [activeTab, setActiveTab] = useState<TabType>('companion');
 
   return (
-    <div style={{
+    <div className="dashboard-container" style={{
       display: 'flex',
       flexDirection: 'column',
       height: '100vh',
       overflowY: 'auto',
-      backgroundColor: 'transparent'
+      backgroundColor: 'transparent',
+      scrollbarWidth: 'none',
+      msOverflowStyle: 'none'
     }}>
+      <style>{`.dashboard-container::-webkit-scrollbar { display: none; }`}</style>
       <Navbar activeTab={activeTab} onTabChange={setActiveTab} />
 
       {/* Main Content Area */}
