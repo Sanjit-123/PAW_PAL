@@ -94,16 +94,29 @@ export const ChatBot: React.FC = () => {
   const currentAction = gameAction || latestBotMsg?.action || 'tail_wag';
 
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', width: '100%', alignItems: 'center' }}>
+    <div style={{ display: 'flex', flexDirection: 'column', width: '100%', alignItems: 'center', paddingTop: '100px' }}>
       
       <div style={{ display: 'flex', gap: '2rem', width: '100%', alignItems: 'stretch' }}>
         
         {/* Left Column: Chat */}
-        <div style={{ flex: 4, display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '1rem' }}>
-          <FurCard style={{ width: '100%', height: '70vh', display: 'flex', flexDirection: 'column', padding: 0, overflow: 'hidden' }}>
+        <div style={{ flex: 2, display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '1rem', position: 'relative' }}>
+          
+          {/* Peeking PawPal */}
+          <div style={{ 
+            position: 'absolute', 
+            top: '-140px', 
+            left: '30%', 
+            transform: 'translateX(-50%) scale(1.1)', 
+            zIndex: 50,
+            pointerEvents: 'auto'
+          }}>
+            <Dog2D expression={currentExpression} action={currentAction} />
+          </div>
+
+          <FurCard style={{ width: '100%', height: '70vh', display: 'flex', flexDirection: 'column', padding: 0, overflow: 'hidden', position: 'relative', zIndex: 10 }}>
             {/* Header */}
-            <div style={{ padding: '1.5rem', borderBottom: '1px solid rgba(0,0,0,0.05)', display: 'flex', alignItems: 'center', gap: '10px', background: 'var(--primary-hover)', color: 'white' }}>
-              <Sparkles size={24} />
+            <div style={{ padding: '1.5rem', borderBottom: '1px solid rgba(0,0,0,0.05)', display: 'flex', alignItems: 'center', gap: '10px', background: '#ff9eb5', color: 'white' }}>
+              <PawPrint size={24} />
               <h2 style={{ margin: 0, fontSize: '1.4rem' }}>Chat with PawPal</h2>
             </div>
 
@@ -115,29 +128,65 @@ export const ChatBot: React.FC = () => {
                 </div>
               )}
             
-            {messages.map((msg, index) => (
-              <div key={msg.id} style={{ display: 'flex', flexDirection: 'column', gap: '5px', alignSelf: msg.sender === 'user' ? 'flex-end' : 'flex-start', maxWidth: '65%' }}>
-                {msg.sender === 'bot' && (msg as any).reaction_emoji && (
-                  <div style={{ fontSize: '0.9rem', color: '#888', fontWeight: 'bold', marginBottom: '-5px', marginLeft: '5px' }}>
-                    {(msg as any).reaction_emoji}
+            {messages.map((msg, index) => {
+              const date = new Date(msg.timestamp || Date.now());
+              const timeString = date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+
+              return (
+                <div key={msg.id} style={{ 
+                  display: 'flex', 
+                  gap: '12px', 
+                  alignSelf: msg.sender === 'user' ? 'flex-end' : 'flex-start', 
+                  maxWidth: '75%',
+                  flexDirection: msg.sender === 'user' ? 'row-reverse' : 'row'
+                }}>
+                  {/* Bot Avatar */}
+                  {msg.sender === 'bot' && (
+                    <div style={{ width: '45px', height: '45px', borderRadius: '50%', backgroundColor: '#ffeaa7', display: 'flex', alignItems: 'center', justifyContent: 'center', overflow: 'hidden', border: '2px solid white', boxShadow: '0 2px 8px rgba(0,0,0,0.1)', flexShrink: 0, alignSelf: 'flex-start' }}>
+                      <span style={{ fontSize: '1.8rem' }}>🐶</span>
+                    </div>
+                  )}
+
+                  <div style={{ display: 'flex', flexDirection: 'column', gap: '4px', alignItems: msg.sender === 'user' ? 'flex-end' : 'flex-start' }}>
+                    <div style={{
+                      padding: '1rem 1.5rem',
+                      borderRadius: msg.sender === 'user' ? '20px 0 20px 20px' : '0 20px 20px 20px',
+                      background: msg.sender === 'user' ? '#fcdde7' : 'white',
+                      color: '#5c4e4e',
+                      boxShadow: '0 4px 15px rgba(0,0,0,0.05)',
+                      width: 'fit-content',
+                      position: 'relative'
+                    }} className="chat-message-text">
+                      {msg.text}
+                      
+                      {/* Speech Bubble Tail */}
+                      <div style={{
+                        position: 'absolute',
+                        top: 0,
+                        [msg.sender === 'user' ? 'right' : 'left']: '-10px',
+                        width: '20px',
+                        height: '20px',
+                        background: msg.sender === 'user' ? '#fcdde7' : 'white',
+                        clipPath: msg.sender === 'user' ? 'polygon(0 0, 0 100%, 100% 0)' : 'polygon(100% 0, 100% 100%, 0 0)'
+                      }} />
+                    </div>
+
+                    <div style={{ display: 'flex', gap: '5px', alignItems: 'center', fontSize: '0.8rem', color: '#a09494' }}>
+                      {timeString}
+                      {msg.sender === 'user' && <span style={{ color: '#ff9eb5', fontWeight: 'bold' }}>✓✓</span>}
+                    </div>
                   </div>
-                )}
-                <div style={{
-                  padding: '1rem 1.5rem',
-                  borderRadius: msg.sender === 'user' ? '20px 20px 0 20px' : '20px 20px 20px 0',
-                  background: msg.sender === 'user' ? 'var(--primary-color)' : 'white',
-                  color: msg.sender === 'user' ? '#5c4e4e' : '#5c4e4e',
-                  boxShadow: '0 4px 15px rgba(0,0,0,0.05)',
-                  width: 'fit-content',
-                  alignSelf: msg.sender === 'user' ? 'flex-end' : 'flex-start',
-                }} className="chat-message-text">
-                  {msg.text}
                 </div>
-              </div>
-            ))}
+              );
+            })}
             {isTyping && (
-              <div style={{ alignSelf: 'flex-start', background: 'white', padding: '1rem 1.5rem', borderRadius: '20px 20px 20px 0', color: '#888', boxShadow: '0 4px 15px rgba(0,0,0,0.05)' }}>
-                🐾 PawPal is typing...
+              <div style={{ display: 'flex', gap: '12px', alignSelf: 'flex-start' }}>
+                <div style={{ width: '45px', height: '45px', borderRadius: '50%', backgroundColor: '#ffeaa7', display: 'flex', alignItems: 'center', justifyContent: 'center', overflow: 'hidden', border: '2px solid white', boxShadow: '0 2px 8px rgba(0,0,0,0.1)', flexShrink: 0 }}>
+                  <span style={{ fontSize: '1.8rem' }}>🐶</span>
+                </div>
+                <div style={{ alignSelf: 'center', background: 'white', padding: '1rem 1.5rem', borderRadius: '0 20px 20px 20px', color: '#888', boxShadow: '0 4px 15px rgba(0,0,0,0.05)' }}>
+                  🐾 PawPal is typing...
+                </div>
               </div>
             )}
             <div ref={messagesEndRef} />
@@ -164,17 +213,8 @@ export const ChatBot: React.FC = () => {
         </FurCard>
       </div>
 
-      {/* Middle Column: Companion Stage */}
-      <div style={{ flex: 3, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', position: 'relative' }}>
-         <div style={{ transform: 'scale(1.3)', zIndex: 10 }}>
-           <Dog2D expression={currentExpression} action={currentAction} />
-         </div>
-         {/* Stage floor ellipse */}
-         <div style={{ width: '250px', height: '40px', background: 'rgba(0,0,0,0.03)', borderRadius: '50%', marginTop: '-20px' }} />
-      </div>
-
-      {/* Right Column: Mini-Game Area */}
-      <div style={{ flex: 3 }}>
+        {/* Right Column: Mini-Game Area */}
+      <div style={{ flex: 1, display: 'flex', flexDirection: 'column' }}>
         <MiniGame onPlayAction={handleGameAction} />
       </div>
 

@@ -1,5 +1,6 @@
 import React from 'react';
-import { PawPrint, BookOpen, Activity, HeartHandshake, MessageCircle } from 'lucide-react';
+import { PawPrint, BookOpen, Activity, HeartHandshake, MessageCircle, ChevronDown } from 'lucide-react';
+import { usePawPoints } from '../../context/PawPointsContext';
 
 export type TabType = 'companion' | 'journal' | 'chat' | 'analytics' | 'resources';
 
@@ -17,25 +18,33 @@ export const Navbar: React.FC<NavbarProps> = ({ activeTab, onTabChange }) => {
     { id: 'resources', label: 'Resources', icon: <HeartHandshake size={20} /> },
   ] as const;
 
+  const { userData } = usePawPoints();
+
   return (
     <nav style={{ 
       display: 'flex', 
-      justifyContent: 'flex-start', // allow scrolling from the left
+      justifyContent: 'space-between',
       alignItems: 'center',
-      padding: '1.5rem',
+      padding: '0.75rem 1.5rem',
+      margin: '1.5rem auto',
+      width: '95%',
+      maxWidth: '1200px',
       position: 'sticky',
-      top: 0,
+      top: '1.5rem',
       zIndex: 100,
-      backgroundColor: 'rgba(252, 249, 242, 0.9)',
-      backdropFilter: 'blur(10px)',
-      borderBottom: '1px solid rgba(92, 78, 78, 0.1)',
+      backgroundColor: '#fdfaf6',
+      borderRadius: '40px',
+      boxShadow: '0 8px 30px rgba(0,0,0,0.08), inset 0 0 10px rgba(255,255,255,0.5)',
+      border: '1px solid rgba(139, 90, 43, 0.1)',
       overflowX: 'auto',
       WebkitOverflowScrolling: 'touch',
-      scrollbarWidth: 'none', // Hide scrollbar for Firefox
-      msOverflowStyle: 'none' // Hide scrollbar for IE/Edge
+      scrollbarWidth: 'none',
+      msOverflowStyle: 'none'
     }}>
       <style>{`nav::-webkit-scrollbar { display: none; }`}</style>
-      <div style={{ display: 'flex', gap: '1rem', margin: '0 auto' }}>
+      
+      {/* Left side: Navigation Tabs */}
+      <div style={{ display: 'flex', gap: '0.5rem' }}>
         {tabs.map(tab => (
           <button 
             key={tab.id}
@@ -58,6 +67,19 @@ export const Navbar: React.FC<NavbarProps> = ({ activeTab, onTabChange }) => {
             {tab.icon} {tab.label}
           </button>
         ))}
+      </div>
+
+      {/* Right side: User Profile & Streak */}
+      <div style={{ display: 'flex', alignItems: 'center', gap: '1rem', marginLeft: 'auto', paddingLeft: '1rem' }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '8px', background: '#fff0e6', padding: '0.5rem 1rem', borderRadius: '20px', fontWeight: 'bold', fontSize: '0.9rem', color: '#5c4e4e' }}>
+          🔥 {userData?.streak_days || 0} Day Streak
+        </div>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '5px', cursor: 'pointer' }}>
+          <div style={{ width: '40px', height: '40px', borderRadius: '50%', backgroundColor: '#ffeaa7', display: 'flex', alignItems: 'center', justifyContent: 'center', overflow: 'hidden', border: '2px solid white', boxShadow: '0 2px 8px rgba(0,0,0,0.1)' }}>
+            <span style={{ fontSize: '1.5rem' }}>🐶</span>
+          </div>
+          <ChevronDown size={18} color="#8c7e7e" />
+        </div>
       </div>
     </nav>
   );

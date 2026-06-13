@@ -27,11 +27,10 @@
 body {
   font-family: 'Quicksand', sans-serif;
   background-color: var(--bg-color);
-  /* Subtle dot pattern for dust/paper texture feel */
-  background-image: radial-gradient(rgba(92, 78, 78, 0.05) 1px, transparent 1px),
-                    radial-gradient(rgba(92, 78, 78, 0.03) 1px, transparent 1px);
-  background-size: 20px 20px, 40px 40px;
-  background-position: 0 0, 10px 10px;
+  background-image: url('/cozy_bg.png');
+  background-size: cover;
+  background-position: center;
+  background-attachment: fixed;
   color: var(--text-primary);
   overflow: hidden; /* Prevent scrolling, app is an interactive dashboard */
   width: 100vw;

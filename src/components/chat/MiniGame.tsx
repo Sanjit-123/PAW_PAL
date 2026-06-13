@@ -52,9 +52,9 @@ export const MiniGame: React.FC<MiniGameProps> = ({ onPlayAction }) => {
         <button 
           className="paw-button"
           onClick={() => handleAction('excited_jump', 'excited', '🎾', '+10 Happiness', '#ff6b6b')}
-          style={{ width: '100%', display: 'flex', flexDirection: 'column', alignItems: 'flex-start', padding: '1rem', background: '#fff', border: '2px solid #ffd1dc', color: '#5c4e4e', transition: 'all 0.2s', borderRadius: '15px' }}
-          onMouseOver={(e) => { e.currentTarget.style.transform = 'translateY(-3px)'; e.currentTarget.style.boxShadow = '0 6px 15px rgba(255, 209, 220, 0.5)'; e.currentTarget.style.background = '#fff5f7'; }}
-          onMouseOut={(e) => { e.currentTarget.style.transform = 'translateY(0)'; e.currentTarget.style.boxShadow = '0 4px 12px rgba(255, 209, 220, 0.2)'; e.currentTarget.style.background = '#fff'; }}
+          style={{ width: '100%', display: 'flex', flexDirection: 'column', alignItems: 'flex-start', padding: '1rem', background: '#fcebf0', border: 'none', color: '#5c4e4e', transition: 'all 0.2s', borderRadius: '15px' }}
+          onMouseOver={(e) => { e.currentTarget.style.transform = 'translateY(-3px)'; e.currentTarget.style.boxShadow = '0 6px 15px rgba(255, 209, 220, 0.8)'; e.currentTarget.style.filter = 'brightness(0.95)'; }}
+          onMouseOut={(e) => { e.currentTarget.style.transform = 'translateY(0)'; e.currentTarget.style.boxShadow = 'none'; e.currentTarget.style.filter = 'brightness(1)'; }}
         >
            <div style={{ display: 'flex', alignItems: 'center', gap: '8px', fontSize: '1.1rem', fontWeight: 'bold' }}>🎾 Throw Ball</div>
            <div style={{ fontSize: '0.85rem', color: '#8c7e7e', marginTop: '4px', fontWeight: 'normal' }}>PawPal loves fetch!</div>
@@ -63,22 +63,22 @@ export const MiniGame: React.FC<MiniGameProps> = ({ onPlayAction }) => {
         <button 
           className="paw-button"
           onClick={() => handleAction('spin', 'playful', '🦴', '+5 Trust', '#88d8b0')}
-          style={{ width: '100%', display: 'flex', flexDirection: 'column', alignItems: 'flex-start', padding: '1rem', background: '#fff', border: '2px solid #d1ead1', color: '#5c4e4e', transition: 'all 0.2s', borderRadius: '15px' }}
-          onMouseOver={(e) => { e.currentTarget.style.transform = 'translateY(-3px)'; e.currentTarget.style.boxShadow = '0 6px 15px rgba(209, 234, 209, 0.5)'; e.currentTarget.style.background = '#f2fcf2'; }}
-          onMouseOut={(e) => { e.currentTarget.style.transform = 'translateY(0)'; e.currentTarget.style.boxShadow = '0 4px 12px rgba(209, 234, 209, 0.2)'; e.currentTarget.style.background = '#fff'; }}
+          style={{ width: '100%', display: 'flex', flexDirection: 'column', alignItems: 'flex-start', padding: '1rem', background: '#eafbe4', border: 'none', color: '#5c4e4e', transition: 'all 0.2s', borderRadius: '15px' }}
+          onMouseOver={(e) => { e.currentTarget.style.transform = 'translateY(-3px)'; e.currentTarget.style.boxShadow = '0 6px 15px rgba(209, 234, 209, 0.8)'; e.currentTarget.style.filter = 'brightness(0.95)'; }}
+          onMouseOut={(e) => { e.currentTarget.style.transform = 'translateY(0)'; e.currentTarget.style.boxShadow = 'none'; e.currentTarget.style.filter = 'brightness(1)'; }}
         >
-          <div style={{ display: 'flex', alignItems: 'center', gap: '8px', fontSize: '1.1rem', fontWeight: 'bold' }}><Bone size={20} color="#88d8b0" /> Give Treat</div>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '8px', fontSize: '1.1rem', fontWeight: 'bold' }}>🦴 Give Treat</div>
           <div style={{ fontSize: '0.85rem', color: '#8c7e7e', marginTop: '4px', fontWeight: 'normal' }}>Reward today's progress!</div>
         </button>
 
         <button 
           className="paw-button"
           onClick={() => handleAction('tail_wag', 'loving', '💗', '+15 Bonding', '#feca57')}
-          style={{ width: '100%', display: 'flex', flexDirection: 'column', alignItems: 'flex-start', padding: '1rem', background: '#fff', border: '2px solid #ffeaa7', color: '#5c4e4e', transition: 'all 0.2s', borderRadius: '15px' }}
-          onMouseOver={(e) => { e.currentTarget.style.transform = 'translateY(-3px)'; e.currentTarget.style.boxShadow = '0 6px 15px rgba(255, 234, 167, 0.5)'; e.currentTarget.style.background = '#fffdf5'; }}
-          onMouseOut={(e) => { e.currentTarget.style.transform = 'translateY(0)'; e.currentTarget.style.boxShadow = '0 4px 12px rgba(255, 234, 167, 0.2)'; e.currentTarget.style.background = '#fff'; }}
+          style={{ width: '100%', display: 'flex', flexDirection: 'column', alignItems: 'flex-start', padding: '1rem', background: '#fae8eb', border: 'none', color: '#5c4e4e', transition: 'all 0.2s', borderRadius: '15px' }}
+          onMouseOver={(e) => { e.currentTarget.style.transform = 'translateY(-3px)'; e.currentTarget.style.boxShadow = '0 6px 15px rgba(255, 182, 193, 0.6)'; e.currentTarget.style.filter = 'brightness(0.95)'; }}
+          onMouseOut={(e) => { e.currentTarget.style.transform = 'translateY(0)'; e.currentTarget.style.boxShadow = 'none'; e.currentTarget.style.filter = 'brightness(1)'; }}
         >
-          <div style={{ display: 'flex', alignItems: 'center', gap: '8px', fontSize: '1.1rem', fontWeight: 'bold' }}><Heart size={20} color="#feca57" /> Belly Rub</div>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '8px', fontSize: '1.1rem', fontWeight: 'bold' }}>💗 Belly Rub</div>
           <div style={{ fontSize: '0.85rem', color: '#8c7e7e', marginTop: '4px', fontWeight: 'normal' }}>Instant comfort boost!</div>
         </button>
       </div>
