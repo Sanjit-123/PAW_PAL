@@ -47,7 +47,7 @@ export const JournalBook: React.FC = () => {
   const inputAreaRef = useRef<HTMLDivElement>(null);
 
   // React synthetic events bubble too late (at the root) for react-pageflip's native listeners.
-  // We must use a native DOM listener to stop propagation immediately.
+  // We must use a native DOM listener to stop propagation immediately, and we must do it in the CAPTURE phase.
   useEffect(() => {
     const el = inputAreaRef.current;
     if (!el) return;
@@ -56,16 +56,16 @@ export const JournalBook: React.FC = () => {
       e.stopPropagation();
     };
 
-    el.addEventListener('pointerdown', stopEvent);
-    el.addEventListener('mousedown', stopEvent);
-    el.addEventListener('touchstart', stopEvent);
-    el.addEventListener('wheel', stopEvent); // also stop scroll from flipping page if any
+    el.addEventListener('pointerdown', stopEvent, { capture: true });
+    el.addEventListener('mousedown', stopEvent, { capture: true });
+    el.addEventListener('touchstart', stopEvent, { capture: true });
+    el.addEventListener('wheel', stopEvent, { capture: true });
 
     return () => {
-      el.removeEventListener('pointerdown', stopEvent);
-      el.removeEventListener('mousedown', stopEvent);
-      el.removeEventListener('touchstart', stopEvent);
-      el.removeEventListener('wheel', stopEvent);
+      el.removeEventListener('pointerdown', stopEvent, { capture: true });
+      el.removeEventListener('mousedown', stopEvent, { capture: true });
+      el.removeEventListener('touchstart', stopEvent, { capture: true });
+      el.removeEventListener('wheel', stopEvent, { capture: true });
     };
   }, []);
 
@@ -171,7 +171,11 @@ export const JournalBook: React.FC = () => {
                 fontFamily: "'Nunito', sans-serif",
                 color: '#3b3131',
                 backgroundImage: 'repeating-linear-gradient(transparent, transparent 31px, #d5c8b5 31px, #d5c8b5 32px)',
-                paddingTop: '6px'
+                paddingTop: '6px',
+                userSelect: 'text',
+                WebkitUserSelect: 'text',
+                pointerEvents: 'auto',
+                cursor: 'text'
               }}
               placeholder="Write whatever is on your mind. It's completely anonymous and safe here..."
               value={entry}

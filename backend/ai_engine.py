@@ -62,8 +62,8 @@ The user says: "{user_text}"
 You must respond with valid JSON matching this schema:
 {{
   "text": "Your supportive, gentle response (1 to 3 short sentences)",
-  "action": "One of: tail_wag, head_tilt, ears_down, excited_jump",
-  "expression": "One of: happy, sad, curious, sleepy, normal"
+  "action": "One of: tail_wag, head_tilt, ears_down, excited_jump, nod_yes, shake_no, shiver, spin, ears_perk, lie_down, panting",
+  "expression": "One of: happy, sad, curious, sleepy, normal, angry, shocked, loving, confused, excited, anxious, playful"
 }}
 
 Choose the action and expression that best fits the emotional tone of your reply.
