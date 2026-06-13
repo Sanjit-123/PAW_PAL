@@ -42,8 +42,8 @@ export const Dog2D: React.FC<DogProps> = ({ expression = 'normal', action = 'tai
   const isEarsPerked = action === 'ears_perk' || expression === 'shocked' || expression === 'excited';
   
   const { rotateEarLeft, rotateEarRight } = useSpring({
-    rotateEarLeft: isEarsDown ? 30 : (isEarsPerked ? -45 : (isOneEarUp ? -30 : (isHovered ? -15 : 0))),
-    rotateEarRight: isEarsDown ? -30 : (isEarsPerked ? 45 : (isHovered ? -15 : 0)),
+    rotateEarLeft: isEarsDown ? -40 : (isEarsPerked ? 15 : (isOneEarUp ? -30 : (isHovered ? -15 : 0))),
+    rotateEarRight: isEarsDown ? 40 : (isEarsPerked ? -15 : (isHovered ? 15 : 0)),
     config: config.stiff,
   });
 
@@ -91,7 +91,7 @@ export const Dog2D: React.FC<DogProps> = ({ expression = 'normal', action = 'tai
   if (isSleepy || isLoving) {
     eyeStyle = { height: '4px', width: '12px', borderRadius: '2px', top: '40px', background: '#333' };
   } else if (isShocked || isExcited) {
-    eyeStyle = { height: '18px', width: '18px', borderRadius: '50%', top: '32px', left: '27px', background: '#333' };
+    eyeStyle = { height: '18px', width: '18px', borderRadius: '50%', top: '32px', background: '#333' };
   } else if (isAnxious) {
     eyeStyle = { height: '10px', width: '10px', borderRadius: '50%', top: '36px', background: '#333' };
   }
