@@ -8,45 +8,68 @@ interface CanvasScrollProps {
 
 export const CanvasScroll: React.FC<CanvasScrollProps> = ({ frameCount, framePath, scrollContainerRef }) => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
-  const imagesRef = useRef<HTMLImageElement[]>([]);
-  const currentFrameRef = useRef(0);
+  const imagesRef = useRef<(HTMLImageElement | null)[]>([]);
+  const targetFrameRef = useRef(0);
+  const paintedFrameRef = useRef(-1);
+  const rafIdRef = useRef<number | null>(null);
 
   useEffect(() => {
     const canvas = canvasRef.current;
     if (!canvas) return;
-    const context = canvas.getContext('2d');
+    // Optimize canvas by disabling alpha channel since we draw full opaque frames
+    const context = canvas.getContext('2d', { alpha: false });
     if (!context) return;
     
-    // We assume standard 16:9 1080p frames for high quality, it will scale via CSS object-fit
-    canvas.width = 1920;
-    canvas.height = 1080;
-    
-    const drawFrame = (index: number) => {
-      const img = imagesRef.current[index];
-      if (img && img.complete) {
-        context.clearRect(0, 0, canvas.width, canvas.height);
-        // Fill canvas while maintaining aspect ratio (cover)
-        const scale = Math.max(canvas.width / img.width, canvas.height / img.height);
-        const x = (canvas.width / 2) - (img.width / 2) * scale;
-        const y = (canvas.height / 2) - (img.height / 2) * scale;
-        context.drawImage(img, x, y, img.width * scale, img.height * scale);
+    // Size canvas exactly to window to prevent expensive scaling during draw
+    const updateCanvasSize = () => {
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+      paintedFrameRef.current = -1; // Force a redraw
+    };
+    updateCanvasSize();
+    window.addEventListener('resize', updateCanvasSize);
+
+    // Render loop decoupled from scroll events
+    const renderLoop = () => {
+      const target = targetFrameRef.current;
+      if (target !== paintedFrameRef.current) {
+        const img = imagesRef.current[target];
+        if (img && img.complete) {
+          const scale = Math.max(canvas.width / img.width, canvas.height / img.height);
+          const x = (canvas.width / 2) - (img.width / 2) * scale;
+          const y = (canvas.height / 2) - (img.height / 2) * scale;
+          context.drawImage(img, x, y, img.width * scale, img.height * scale);
+          paintedFrameRef.current = target;
+        }
+      }
+      rafIdRef.current = requestAnimationFrame(renderLoop);
+    };
+    rafIdRef.current = requestAnimationFrame(renderLoop);
+
+    // Batched preloading to prevent network and main-thread freezing
+    let isCancelled = false;
+    const preloadImages = async () => {
+      imagesRef.current = new Array(frameCount).fill(null);
+      const batchSize = 10;
+      for (let i = 0; i < frameCount; i += batchSize) {
+        if (isCancelled) return;
+        const batch = [];
+        for (let j = 0; j < batchSize && i + j < frameCount; j++) {
+          const index = i + j + 1; // Frames are 1-indexed
+          const promise = new Promise<HTMLImageElement>((resolve) => {
+            const img = new Image();
+            img.src = framePath(index);
+            img.onload = () => resolve(img);
+            img.onerror = () => resolve(img); // Resolve anyway to continue
+          });
+          batch.push(promise.then(img => {
+            imagesRef.current[index - 1] = img;
+          }));
+        }
+        await Promise.all(batch);
       }
     };
-
-    // Preload images
-    let loaded = 0;
-    for (let i = 1; i <= frameCount; i++) {
-      const img = new Image();
-      img.src = framePath(i);
-      img.onload = () => {
-        loaded++;
-        // Draw the very first frame immediately once loaded
-        if (i === 1) {
-          drawFrame(0);
-        }
-      };
-      imagesRef.current.push(img);
-    }
+    preloadImages();
     
     const handleScroll = () => {
       const container = scrollContainerRef.current;
@@ -55,29 +78,25 @@ export const CanvasScroll: React.FC<CanvasScrollProps> = ({ frameCount, framePat
       const scrollTop = container.scrollTop;
       const maxScrollTop = container.scrollHeight - container.clientHeight;
       
-      const scrollFraction = scrollTop / maxScrollTop;
-      const frameIndex = Math.min(
+      const scrollFraction = Math.max(0, Math.min(1, scrollTop / maxScrollTop));
+      targetFrameRef.current = Math.min(
         frameCount - 1,
         Math.floor(scrollFraction * frameCount)
       );
-      
-      if (frameIndex !== currentFrameRef.current) {
-        currentFrameRef.current = frameIndex;
-        requestAnimationFrame(() => drawFrame(frameIndex));
-      }
     };
     
     const container = scrollContainerRef.current;
     if (container) {
-      container.addEventListener('scroll', handleScroll);
-      // Run once on mount in case we start somewhat scrolled
+      // Use passive listener for better scroll performance
+      container.addEventListener('scroll', handleScroll, { passive: true });
       handleScroll();
     }
     
     return () => {
-      if (container) {
-        container.removeEventListener('scroll', handleScroll);
-      }
+      isCancelled = true;
+      if (rafIdRef.current) cancelAnimationFrame(rafIdRef.current);
+      if (container) container.removeEventListener('scroll', handleScroll);
+      window.removeEventListener('resize', updateCanvasSize);
     };
   }, [frameCount, framePath, scrollContainerRef]);
 
@@ -92,8 +111,7 @@ export const CanvasScroll: React.FC<CanvasScrollProps> = ({ frameCount, framePat
         top: 0,
         left: 0,
         zIndex: 0,
-        pointerEvents: 'none',
-        opacity: 0.8 // Soften it slightly to overlay text
+        pointerEvents: 'none'
       }}
     />
   );

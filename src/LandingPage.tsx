@@ -82,6 +82,39 @@ export const LandingPage: React.FC<LandingPageProps> = ({ onEnter }) => {
         </div>
 
       </div>
+
+      {/* Glassmorphism Navigation Button (Fixed at Bottom Center) */}
+      <div style={{
+        position: 'fixed',
+        bottom: '30px',
+        left: '50%',
+        transform: 'translateX(-50%)',
+        zIndex: 50
+      }}>
+        <button 
+          onClick={onEnter}
+          style={{
+            background: 'rgba(255, 255, 255, 0.4)',
+            backdropFilter: 'blur(15px)',
+            border: '1px solid rgba(255, 255, 255, 0.5)',
+            boxShadow: '0 8px 32px rgba(0, 0, 0, 0.1)',
+            padding: '12px 24px',
+            borderRadius: '30px',
+            color: '#5c4e4e',
+            fontSize: '1.1rem',
+            fontWeight: 'bold',
+            cursor: 'pointer',
+            display: 'flex',
+            alignItems: 'center',
+            gap: '8px',
+            transition: 'all 0.3s ease'
+          }}
+          onMouseOver={(e) => e.currentTarget.style.background = 'rgba(255, 255, 255, 0.6)'}
+          onMouseOut={(e) => e.currentTarget.style.background = 'rgba(255, 255, 255, 0.4)'}
+        >
+          Skip to Features <ArrowDown size={18} style={{ transform: 'rotate(-90deg)' }} />
+        </button>
+      </div>
     </div>
   );
 };
