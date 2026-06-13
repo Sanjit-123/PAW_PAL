@@ -50,34 +50,36 @@
 .journal-spine {
   position: absolute;
   top: 0; bottom: 0; left: 50%;
-  width: 60px;
+  width: 36px;
   transform: translateX(-50%);
-  background: linear-gradient(to right, rgba(0,0,0,0.6) 0%, rgba(0,0,0,0.1) 20%, rgba(255,255,255,0.1) 50%, rgba(0,0,0,0.1) 80%, rgba(0,0,0,0.6) 100%);
+  background: linear-gradient(to right, rgba(0,0,0,0.4) 0%, rgba(255,255,255,0.2) 50%, rgba(0,0,0,0.4) 100%);
   pointer-events: none;
   z-index: 10;
-  box-shadow: inset 0 0 20px rgba(0,0,0,0.5);
+  box-shadow: inset -10px 0 15px rgba(0,0,0,0.12), 
+              inset 10px 0 15px rgba(255,255,255,0.5);
   border-radius: 50% / 10px;
 }
 
 .ribbon {
   position: absolute;
-  top: -10px;
-  left: 48%;
-  width: 25px;
-  height: 120px;
+  top: -5px;
+  left: 50%;
+  width: 22px;
+  height: 140px;
   background: #ff6b6b;
   box-shadow: 2px 5px 10px rgba(0,0,0,0.3), inset -2px 0 5px rgba(0,0,0,0.2);
-  z-index: 5;
+  z-index: 12;
   clip-path: polygon(0 0, 100% 0, 100% 100%, 50% 90%, 0 100%);
   transform-origin: top center;
+  transform: translateX(-50%);
   animation: sway 4s ease-in-out infinite;
 }
 
 .journal-page {
   flex: 1;
   background-color: #fdf6e3;
-  /* Paper texture noise */
-  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)' opacity='0.04'/%3E%3C/svg%3E");
+  /* Aged paper texture noise */
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)' opacity='0.08'/%3E%3C/svg%3E");
   border: 1px solid #e0d6c8;
   padding: 2.5rem;
   min-height: 600px;
@@ -150,11 +152,12 @@
   transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
   box-shadow: 0 4px 10px rgba(0,0,0,0.02);
   position: relative;
+  font-family: 'Quicksand', sans-serif;
 }
 
 .mood-paw-card:hover {
-  transform: translateY(-3px);
-  box-shadow: 0 6px 15px rgba(255, 182, 193, 0.3);
+  transform: translateY(-4px);
+  box-shadow: 0 8px 18px rgba(255, 182, 193, 0.4);
   border-color: #ffd1dc;
 }
 
@@ -162,8 +165,8 @@
   background-color: #ffd1dc;
   border-color: #ffb6c1;
   color: #5c4e4e;
-  transform: scale(1.05) translateY(-2px);
-  box-shadow: 0 0 20px rgba(255, 182, 193, 0.6);
+  transform: scale(1.08) translateY(-4px);
+  box-shadow: 0 0 25px rgba(255, 182, 193, 0.8), inset 0 0 10px rgba(255, 255, 255, 0.8);
 }
 
 .journal-textarea {
@@ -174,10 +177,10 @@
   background: transparent;
   resize: none;
   font-size: 1.2rem;
-  line-height: 36px;
+  line-height: 45px;
   font-family: 'Nunito', sans-serif;
-  color: #3b3131;
-  background-image: repeating-linear-gradient(transparent, transparent 35px, rgba(139, 90, 43, 0.1) 35px, rgba(139, 90, 43, 0.1) 36px);
+  color: rgba(59, 49, 49, 0.85); /* Increased contrast */
+  background-image: repeating-linear-gradient(transparent, transparent 44px, rgba(139, 90, 43, 0.15) 44px, rgba(139, 90, 43, 0.15) 45px);
   padding-top: 6px;
 }
 
@@ -196,13 +199,12 @@
   text-shadow: 0 5px 15px rgba(255, 107, 107, 0.4);
 }
 
-/* Dog Integration Container */
+/* Dog Integration Container (Now outside the book) */
 .journal-dog-container {
   position: absolute;
-  bottom: -40px;
-  right: -20px;
-  transform: scale(0.65);
-  transform-origin: bottom right;
+  bottom: 0px;
+  right: -250px;
+  transform: scale(0.9);
   pointer-events: auto;
   z-index: 20;
 }

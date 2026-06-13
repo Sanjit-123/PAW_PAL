@@ -72,7 +72,8 @@ You must respond with valid JSON matching this schema:
 {{
   "text": "Your supportive, gentle response (1 to 3 short sentences)",
   "action": "One of: tail_wag, head_tilt, ears_down, excited_jump, nod_yes, shake_no, shiver, spin, ears_perk, lie_down, panting",
-  "expression": "One of: happy, sad, curious, sleepy, normal, angry, shocked, loving, confused, excited, anxious, playful"
+  "expression": "One of: happy, sad, curious, sleepy, normal, angry, shocked, loving, confused, excited, anxious, playful",
+  "reaction_emoji": "A single text prefix combining an animal/emoji and an emotion symbol, e.g., '🐶💗 Supportive', '🐶✨ Excited', '🐶😴 Calm', '🐶🌧 Concerned'"
 }}
 
 IMPORTANT - Map the user's emotional tone to your expression:

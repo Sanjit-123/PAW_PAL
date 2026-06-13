@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&family=Quicksand:wght@400;500;600;700&family=Caveat:wght@400;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600;700&family=Nunito:wght@400;600;700;800&family=Quicksand:wght@400;500;600;700&family=Caveat:wght@400;600;700&display=swap');
 
 :root {
   /* Color Palette - Soft Pastel & Cozy */
@@ -25,8 +25,13 @@
 }
 
 body {
-  font-family: 'Nunito', sans-serif;
+  font-family: 'Quicksand', sans-serif;
   background-color: var(--bg-color);
+  /* Subtle dot pattern for dust/paper texture feel */
+  background-image: radial-gradient(rgba(92, 78, 78, 0.05) 1px, transparent 1px),
+                    radial-gradient(rgba(92, 78, 78, 0.03) 1px, transparent 1px);
+  background-size: 20px 20px, 40px 40px;
+  background-position: 0 0, 10px 10px;
   color: var(--text-primary);
   overflow: hidden; /* Prevent scrolling, app is an interactive dashboard */
   width: 100vw;
@@ -97,8 +102,14 @@ body {
   transform: scale(0.95);
 }
 
-/* Typograpy */
+/* Typography */
 h1, h2, h3, h4, h5, h6 {
-  font-family: 'Quicksand', sans-serif;
-  font-weight: 700;
+  font-family: 'Fredoka', sans-serif;
+  font-weight: 600;
+}
+
+.chat-message-text {
+  font-family: 'Nunito', sans-serif;
+  font-size: 1.05rem;
+  line-height: 1.5;
 }

@@ -49,10 +49,11 @@ export const Navbar: React.FC<NavbarProps> = ({ activeTab, onTabChange }) => {
               borderRadius: '25px', 
               cursor: 'pointer', 
               fontWeight: 'bold', 
-              color: 'var(--text-primary)',
+              color: activeTab === tab.id ? '#5c4e4e' : 'var(--text-primary)',
               transition: 'all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275)',
-              transform: activeTab === tab.id ? 'scale(1.05)' : 'scale(1)',
-              boxShadow: activeTab === tab.id ? '0 4px 15px rgba(255, 209, 220, 0.6)' : 'none'
+              transform: activeTab === tab.id ? 'scale(1.08) translateY(-2px)' : 'scale(1)',
+              boxShadow: activeTab === tab.id ? '0 6px 15px rgba(255, 182, 193, 0.5), inset 0 -2px 5px rgba(0,0,0,0.1)' : 'none',
+              border: activeTab === tab.id ? '1px solid #ffb6c1' : '1px solid transparent'
             }}>
             {tab.icon} {tab.label}
           </button>

@@ -28,6 +28,7 @@ class ChatResponse(BaseModel):
     stress_level: Optional[str] = None
     action: Optional[str] = None
     expression: Optional[str] = None
+    reaction_emoji: Optional[str] = None
 
     class Config:
         orm_mode = True

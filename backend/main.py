@@ -106,7 +106,8 @@ def send_chat_message(chat: schemas.ChatCreate, db: Session = Depends(get_db)):
         sender="bot",
         text=bot_reply_data.get("text", "Bark!"),
         action=bot_reply_data.get("action", "tail_wag"),
-        expression=bot_reply_data.get("expression", "normal")
+        expression=bot_reply_data.get("expression", "normal"),
+        reaction_emoji=bot_reply_data.get("reaction_emoji", "")
     )
     db.add(bot_msg)
 

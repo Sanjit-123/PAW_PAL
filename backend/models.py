@@ -39,3 +39,4 @@ class ChatMessage(Base):
     stress_level = Column(String, nullable=True)
     action = Column(String, nullable=True)
     expression = Column(String, nullable=True)
+    reaction_emoji = Column(String, nullable=True)

@@ -79,7 +79,7 @@ const Dashboard: React.FC = () => {
         )}
 
         {activeTab === 'chat' && (
-          <div style={{ width: '100%', maxWidth: '1000px', display: 'flex', justifyContent: 'center' }}>
+          <div style={{ width: '100%', maxWidth: '1200px', display: 'flex', justifyContent: 'center' }}>
             <ChatBot />
           </div>
         )}
