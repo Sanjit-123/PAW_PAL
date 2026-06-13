@@ -40,15 +40,16 @@ export const LandingPage: React.FC<LandingPageProps> = ({ onEnter }) => {
       <div style={{ height: '1500vh', position: 'relative', zIndex: 10 }}>
         
         {/* Intro Section - Top of Page */}
-        <div style={{ height: '100vh', display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center', textAlign: 'center', padding: '2rem' }}>
-          <h1 style={{ fontSize: '4rem', color: '#5c4e4e', textShadow: '0 4px 20px rgba(255,255,255,0.8)' }}>
+        <div style={{ height: '100vh', display: 'flex', flexDirection: 'column', justifyContent: 'flex-start', alignItems: 'flex-start', textAlign: 'left', padding: '10vh 10vw' }}>
+          <h1 style={{ fontSize: '5rem', color: '#5c4e4e', textShadow: '0 4px 30px rgba(255,255,255,1)', margin: 0 }}>
             Meet PawPal
           </h1>
-          <p style={{ fontSize: '1.5rem', color: '#8c7e7e', marginTop: '1rem', textShadow: '0 2px 10px rgba(255,255,255,0.8)' }}>
+          <p style={{ fontSize: '1.8rem', color: '#8c7e7e', marginTop: '1rem', textShadow: '0 2px 20px rgba(255,255,255,1)', maxWidth: '450px', lineHeight: 1.4 }}>
             Your AI companion for emotional wellness.
           </p>
-          <div style={{ marginTop: 'auto', marginBottom: '2rem', animation: 'float 2s ease-in-out infinite', color: '#8c7e7e' }}>
-            <p style={{ marginBottom: '0.5rem' }}>Scroll Down</p>
+          
+          <div style={{ position: 'absolute', bottom: '10vh', left: '10vw', animation: 'float 2s ease-in-out infinite', color: '#8c7e7e', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+            <p style={{ marginBottom: '0.5rem', fontWeight: 'bold' }}>Scroll Down</p>
             <ArrowDown size={32} />
           </div>
         </div>

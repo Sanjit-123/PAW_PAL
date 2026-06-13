@@ -42,10 +42,21 @@ export const CanvasScroll: React.FC<CanvasScrollProps> = ({ frameCount, framePat
           const x = (canvas.width / 2) - (drawW / 2);
           const y = (canvas.height / 2) - (drawH / 2);
           
-          // Clear and fill the background with the app's soft beige color to hide seams
-          context.fillStyle = '#fcf9f2';
-          context.fillRect(0, 0, canvas.width, canvas.height);
+          // Draw image to sample the top-left pixel (10px padding for safety)
+          context.drawImage(img, x, y, drawW, drawH);
           
+          try {
+            const p = context.getImageData(x + 10, y + 10, 1, 1).data;
+            // Clear and fill the background with the exact sampled color to hide seams
+            context.fillStyle = `rgb(${p[0]}, ${p[1]}, ${p[2]})`;
+            context.fillRect(0, 0, canvas.width, canvas.height);
+          } catch (e) {
+            // Fallback if cross-origin taint happens (shouldn't locally)
+            context.fillStyle = '#fcf9f2';
+            context.fillRect(0, 0, canvas.width, canvas.height);
+          }
+          
+          // Draw image again over the seamless background
           context.drawImage(img, x, y, drawW, drawH);
           paintedFrameRef.current = target;
         }
