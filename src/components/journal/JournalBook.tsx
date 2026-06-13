@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState } from 'react';
 import HTMLFlipBook from 'react-pageflip';
 import { PawButton } from '../ui/PawButton';
 import { usePawPoints } from '../../context/PawPointsContext';
@@ -44,36 +44,6 @@ export const JournalBook: React.FC = () => {
   const [entry, setEntry] = useState("");
   const [isSaving, setIsSaving] = useState(false);
   const { refreshUserData } = usePawPoints();
-  const inputAreaRef = useRef<HTMLDivElement>(null);
-
-  // React synthetic events bubble too late (at the root) for react-pageflip's native listeners.
-  // We must use a native DOM listener to stop propagation immediately, and we must do it in the CAPTURE phase.
-  useEffect(() => {
-    const el = inputAreaRef.current;
-    if (!el) return;
-
-    const stopEvent = (e: Event) => {
-      e.stopPropagation();
-    };
-
-    el.addEventListener('pointerdown', stopEvent, { capture: true });
-    el.addEventListener('mousedown', stopEvent, { capture: true });
-    el.addEventListener('touchstart', stopEvent, { capture: true });
-    el.addEventListener('wheel', stopEvent, { capture: true });
-    el.addEventListener('keydown', stopEvent, { capture: true });
-    el.addEventListener('keyup', stopEvent, { capture: true });
-    el.addEventListener('keypress', stopEvent, { capture: true });
-
-    return () => {
-      el.removeEventListener('pointerdown', stopEvent, { capture: true });
-      el.removeEventListener('mousedown', stopEvent, { capture: true });
-      el.removeEventListener('touchstart', stopEvent, { capture: true });
-      el.removeEventListener('wheel', stopEvent, { capture: true });
-      el.removeEventListener('keydown', stopEvent, { capture: true });
-      el.removeEventListener('keyup', stopEvent, { capture: true });
-      el.removeEventListener('keypress', stopEvent, { capture: true });
-    };
-  }, []);
 
   const handleSave = async () => {
     if (!entry.trim()) return;
@@ -135,36 +105,58 @@ export const JournalBook: React.FC = () => {
           minHeight={500}
           maxHeight={650}
           drawShadow={true}
-          flippingTime={1000}
           showCover={false}
-          usePortrait={false} // Force 2-page landscape mode
-          useMouseEvents={false} // Disables drag-to-flip so inputs work perfectly
+          usePortrait={false}
+          useMouseEvents={false}
           className="journal-book"
           style={{ zIndex: 1 }}
         >
-        <Page number={1}>
-          <h2 style={{ color: '#5c4e4e', marginBottom: '1rem' }}>How are you feeling today?</h2>
-          <div style={{ display: 'flex', gap: '10px', flexWrap: 'wrap', marginBottom: '2rem' }}>
-            {['😊 Happy', '😌 Calm', '😔 Sad', '😰 Anxious', '😴 Tired'].map(mood => (
-              <div key={mood} style={{
-                padding: '0.5rem 1rem',
-                backgroundColor: '#ffd1dc',
-                borderRadius: '20px',
-                cursor: 'pointer',
-                fontWeight: 'bold',
-                color: '#5c4e4e'
-              }}>
-                {mood}
-              </div>
-            ))}
+          {/* We only use the FlipBook as a visual background. The real inputs are overlaid. */}
+          <Page number={1}><div /></Page>
+          <Page number={2}><div /></Page>
+        </HTMLFlipBook>
+
+        {/* --- PERFECTLY SECURE INTERACTIVE OVERLAYS --- */}
+        {/* Left Page Overlay */}
+        <div style={{
+          position: 'absolute',
+          top: '15px', left: '10px',
+          width: '450px', height: '550px',
+          zIndex: 100, padding: '2rem',
+          pointerEvents: 'none'
+        }}>
+          <div style={{ pointerEvents: 'auto', height: '100%' }}>
+            <h2 style={{ color: '#5c4e4e', marginBottom: '1rem' }}>How are you feeling today?</h2>
+            <div style={{ display: 'flex', gap: '10px', flexWrap: 'wrap', marginBottom: '2rem' }}>
+              {['😊 Happy', '😌 Calm', '😔 Sad', '😰 Anxious', '😴 Tired'].map(mood => (
+                <div key={mood} style={{
+                  padding: '0.5rem 1rem',
+                  backgroundColor: '#ffd1dc',
+                  borderRadius: '20px',
+                  cursor: 'pointer',
+                  fontWeight: 'bold',
+                  color: '#5c4e4e'
+                }}>
+                  {mood}
+                </div>
+              ))}
+            </div>
+            <div style={{ opacity: 0.7, fontSize: '0.9rem' }}>
+              <p>🐾 Tip: Tracking your mood helps PawPal understand you better!</p>
+            </div>
           </div>
-          <div style={{ opacity: 0.7, fontSize: '0.9rem' }}>
-            <p>🐾 Tip: Tracking your mood helps PawPal understand you better!</p>
-          </div>
-        </Page>
-        <Page number={2}>
-          <h2 style={{ color: '#5c4e4e', marginBottom: '1rem' }}>Dear PawPal...</h2>
-          <div ref={inputAreaRef} style={{ width: '100%', height: '100%', display: 'flex', flexDirection: 'column' }}>
+        </div>
+
+        {/* Right Page Overlay */}
+        <div style={{
+          position: 'absolute',
+          top: '15px', right: '10px',
+          width: '450px', height: '550px',
+          zIndex: 100, padding: '2rem',
+          pointerEvents: 'none'
+        }}>
+          <div style={{ pointerEvents: 'auto', height: '100%', display: 'flex', flexDirection: 'column' }}>
+            <h2 style={{ color: '#5c4e4e', marginBottom: '1rem' }}>Dear PawPal...</h2>
             <textarea 
               style={{
                 width: '100%',
@@ -174,15 +166,11 @@ export const JournalBook: React.FC = () => {
                 background: 'transparent',
                 resize: 'none',
                 fontSize: '1.1rem',
-                lineHeight: '32px', // Match gradient lines
+                lineHeight: '32px',
                 fontFamily: "'Nunito', sans-serif",
                 color: '#3b3131',
                 backgroundImage: 'repeating-linear-gradient(transparent, transparent 31px, #d5c8b5 31px, #d5c8b5 32px)',
-                paddingTop: '6px',
-                userSelect: 'text',
-                WebkitUserSelect: 'text',
-                pointerEvents: 'auto',
-                cursor: 'text'
+                paddingTop: '6px'
               }}
               placeholder="Write whatever is on your mind. It's completely anonymous and safe here..."
               value={entry}
@@ -194,8 +182,8 @@ export const JournalBook: React.FC = () => {
               </PawButton>
             </div>
           </div>
-        </Page>
-      </HTMLFlipBook>
+        </div>
+
       </div>
     </div>
   );
