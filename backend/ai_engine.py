@@ -48,14 +48,23 @@ def analyze_journal(text: str) -> dict:
         "stress_level": stress_level
     }
 
-def generate_bot_response(user_text: str, analysis: dict) -> dict:
+def generate_bot_response(user_text: str, analysis: dict, history: list = None) -> dict:
     try:
         model = genai.GenerativeModel('gemini-2.5-flash', generation_config={"response_mime_type": "application/json"})
+        
+        history_str = ""
+        if history:
+            history_str = "Recent Conversation History:\n"
+            for msg in history:
+                role = "User" if msg["sender"] == "user" else "PawPal"
+                history_str += f"{role}: {msg['text']}\n"
         
         prompt = f"""
 You are PawPal, an empathetic, comforting, and non-judgmental digital pet dog supporting a college student.
 The user's inferred current emotional state: {analysis['sentiment']}
 The user's inferred stress level: {analysis['stress_level']}
+
+{history_str}
 
 The user says: "{user_text}"
 
@@ -66,7 +75,15 @@ You must respond with valid JSON matching this schema:
   "expression": "One of: happy, sad, curious, sleepy, normal, angry, shocked, loving, confused, excited, anxious, playful"
 }}
 
-Choose the action and expression that best fits the emotional tone of your reply.
+IMPORTANT - Map the user's emotional tone to your expression:
+- If user tone is joyful/excited -> expression: playful | excited, action: excited_jump | spin | tail_wag
+- If user tone is sad/depressed -> expression: sad | loving, action: ears_down | lie_down
+- If user tone is stressed/anxious -> expression: anxious | normal, action: shiver | panting
+- If user tone is angry/frustrated -> expression: sad | shocked, action: ears_down
+- If user tone is curious/asking -> expression: curious | confused, action: head_tilt
+- If user tone is affectionate -> expression: loving | sleepy, action: tail_wag | nod_yes
+
+Choose the action and expression that best fits the emotional tone of your reply, ensuring you rigorously apply the correct animation mapping.
         """
         
         response = model.generate_content(prompt)

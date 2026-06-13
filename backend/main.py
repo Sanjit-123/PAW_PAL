@@ -94,14 +94,19 @@ def send_chat_message(chat: schemas.ChatCreate, db: Session = Depends(get_db)):
     )
     db.add(user_msg)
 
+    # Fetch last 5 messages for context
+    history = db.query(models.ChatMessage).order_by(models.ChatMessage.timestamp.desc()).limit(5).all()
+    history.reverse()
+    formatted_history = [{"sender": h.sender, "text": h.text} for h in history]
+
     # 3. Generate and Save Bot Message
-    bot_reply_data = generate_bot_response(chat.text, analysis)
+    bot_reply_data = generate_bot_response(chat.text, analysis, formatted_history)
     bot_msg = models.ChatMessage(
         user_id=1,
         sender="bot",
-        text=bot_reply_data["text"],
-        action=bot_reply_data["action"],
-        expression=bot_reply_data["expression"]
+        text=bot_reply_data.get("text", "Bark!"),
+        action=bot_reply_data.get("action", "tail_wag"),
+        expression=bot_reply_data.get("expression", "normal")
     )
     db.add(bot_msg)
 
