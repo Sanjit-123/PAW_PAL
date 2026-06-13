@@ -77,12 +77,18 @@ export const Dog2D: React.FC<DogProps> = ({ expression = 'normal', action = 'tai
   const isShivering = action === 'shiver' || expression === 'anxious';
 
   const { bodyTranslateY, bodyScaleY, bodyTranslateX, bodyRotateZ } = useSpring({
-    bodyTranslateY: isJumping ? -30 : (isLieDown ? 20 : (isBellyRub ? 5 : 0)),
-    bodyScaleY: isLieDown ? 0.7 : (isPanting ? 1.05 : (isBellyRub ? 0.95 : 1)),
-    bodyTranslateX: isShivering ? -3 : (isBellyRub ? 8 : 0),
-    bodyRotateZ: isSpinning ? 360 : (isBellyRub ? 12 : 0),
-    loop: isJumping || isShivering || isPanting || isBellyRub ? { reverse: true } : (isSpinning ? true : false),
-    config: isShivering ? { tension: 800, friction: 10 } : (isBellyRub ? { tension: 500, friction: 5 } : config.wobbly),
+    bodyTranslateY: isJumping ? -30 : (isLieDown ? 20 : (isBellyRub ? 40 : 0)),
+    bodyScaleY: isLieDown ? 0.7 : (isPanting ? 1.05 : (isBellyRub ? 0.9 : 1)),
+    bodyTranslateX: isShivering ? -3 : 0,
+    bodyRotateZ: isSpinning ? 360 : (isBellyRub ? 180 : 0),
+    loop: isJumping || isShivering || isPanting ? { reverse: true } : (isSpinning ? true : false),
+    config: isShivering ? { tension: 800, friction: 10 } : config.wobbly,
+  });
+
+  const { bellyRubWobble } = useSpring({
+    bellyRubWobble: isBellyRub ? 15 : 0,
+    loop: isBellyRub ? { reverse: true } : false,
+    config: { tension: 400, friction: 10 },
   });
 
   // --- Expressions Styling ---
@@ -131,7 +137,7 @@ export const Dog2D: React.FC<DogProps> = ({ expression = 'normal', action = 'tai
     <animated.div 
       style={{ 
         position: 'relative', width: '200px', height: '200px', cursor: 'pointer', marginTop: hasBed ? '20px' : '0', 
-        transform: to([bodyTranslateY, bodyTranslateX, bodyRotateZ], (y, x, rz) => `translateY(${y}px) translateX(${x}px) rotateZ(${rz}deg)`)
+        transform: to([bodyTranslateY, bodyTranslateX, bodyRotateZ, bellyRubWobble], (y, x, rz, brw) => `translateY(${y}px) translateX(${x}px) rotateZ(${rz + brw}deg)`)
       }}
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
