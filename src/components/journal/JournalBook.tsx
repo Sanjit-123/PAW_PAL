@@ -60,12 +60,18 @@ export const JournalBook: React.FC = () => {
     el.addEventListener('mousedown', stopEvent, { capture: true });
     el.addEventListener('touchstart', stopEvent, { capture: true });
     el.addEventListener('wheel', stopEvent, { capture: true });
+    el.addEventListener('keydown', stopEvent, { capture: true });
+    el.addEventListener('keyup', stopEvent, { capture: true });
+    el.addEventListener('keypress', stopEvent, { capture: true });
 
     return () => {
       el.removeEventListener('pointerdown', stopEvent, { capture: true });
       el.removeEventListener('mousedown', stopEvent, { capture: true });
       el.removeEventListener('touchstart', stopEvent, { capture: true });
       el.removeEventListener('wheel', stopEvent, { capture: true });
+      el.removeEventListener('keydown', stopEvent, { capture: true });
+      el.removeEventListener('keyup', stopEvent, { capture: true });
+      el.removeEventListener('keypress', stopEvent, { capture: true });
     };
   }, []);
 
