@@ -35,10 +35,18 @@ export const CanvasScroll: React.FC<CanvasScrollProps> = ({ frameCount, framePat
       if (target !== paintedFrameRef.current) {
         const img = imagesRef.current[target];
         if (img && img.complete) {
-          const scale = Math.max(canvas.width / img.width, canvas.height / img.height);
-          const x = (canvas.width / 2) - (img.width / 2) * scale;
-          const y = (canvas.height / 2) - (img.height / 2) * scale;
-          context.drawImage(img, x, y, img.width * scale, img.height * scale);
+          // Use Math.min to contain the image entirely within the window (zoomed out to fit)
+          const scale = Math.min(canvas.width / img.width, canvas.height / img.height);
+          const drawW = img.width * scale;
+          const drawH = img.height * scale;
+          const x = (canvas.width / 2) - (drawW / 2);
+          const y = (canvas.height / 2) - (drawH / 2);
+          
+          // Clear and fill the background with the app's soft beige color to hide seams
+          context.fillStyle = '#fcf9f2';
+          context.fillRect(0, 0, canvas.width, canvas.height);
+          
+          context.drawImage(img, x, y, drawW, drawH);
           paintedFrameRef.current = target;
         }
       }
