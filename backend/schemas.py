@@ -5,9 +5,8 @@ from datetime import datetime
 class JournalCreate(BaseModel):
     entry_text: str
 
-class JournalResponse(BaseModel):
+class JournalResponse(JournalCreate):
     id: int
-    entry_text: str
     timestamp: datetime
     sentiment: str
     stress_score: int
@@ -15,6 +14,23 @@ class JournalResponse(BaseModel):
 
     class Config:
         from_attributes = True
+
+class ChatCreate(BaseModel):
+    text: str
+
+class ChatResponse(BaseModel):
+    id: int
+    sender: str
+    text: str
+    timestamp: datetime
+    sentiment: Optional[str] = None
+    stress_score: Optional[int] = None
+    stress_level: Optional[str] = None
+    action: Optional[str] = None
+    expression: Optional[str] = None
+
+    class Config:
+        orm_mode = True
 
 class UserResponse(BaseModel):
     id: int

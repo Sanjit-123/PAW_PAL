@@ -1,4 +1,11 @@
+import os
+import json
 from textblob import TextBlob
+import google.generativeai as genai
+from dotenv import load_dotenv
+
+load_dotenv()
+genai.configure(api_key=os.getenv("GEMINI_API_KEY"))
 
 def analyze_journal(text: str) -> dict:
     """
@@ -40,3 +47,36 @@ def analyze_journal(text: str) -> dict:
         "stress_score": stress_score,
         "stress_level": stress_level
     }
+
+def generate_bot_response(user_text: str, analysis: dict) -> dict:
+    try:
+        model = genai.GenerativeModel('gemini-2.5-flash', generation_config={"response_mime_type": "application/json"})
+        
+        prompt = f"""
+You are PawPal, an empathetic, comforting, and non-judgmental digital pet dog supporting a college student.
+The user's inferred current emotional state: {analysis['sentiment']}
+The user's inferred stress level: {analysis['stress_level']}
+
+The user says: "{user_text}"
+
+You must respond with valid JSON matching this schema:
+{{
+  "text": "Your supportive, gentle response (1 to 3 short sentences)",
+  "action": "One of: tail_wag, head_tilt, ears_down, excited_jump",
+  "expression": "One of: happy, sad, curious, sleepy, normal"
+}}
+
+Choose the action and expression that best fits the emotional tone of your reply.
+        """
+        
+        response = model.generate_content(prompt)
+        data = json.loads(response.text)
+        return data
+    except Exception as e:
+        print(f"Gemini API Error: {e}")
+        # Fallback to simple rule-engine if API fails
+        return {
+            "text": "I'm always here to listen, friend. Tell me more about what's on your mind. 🐾",
+            "action": "tail_wag",
+            "expression": "normal"
+        }

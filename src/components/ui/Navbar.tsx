@@ -1,7 +1,7 @@
 import React from 'react';
-import { PawPrint, BookOpen, Activity, HeartHandshake } from 'lucide-react';
+import { PawPrint, BookOpen, Activity, HeartHandshake, MessageCircle } from 'lucide-react';
 
-export type TabType = 'companion' | 'journal' | 'analytics' | 'resources';
+export type TabType = 'companion' | 'journal' | 'chat' | 'analytics' | 'resources';
 
 interface NavbarProps {
   activeTab: TabType;
@@ -12,6 +12,7 @@ export const Navbar: React.FC<NavbarProps> = ({ activeTab, onTabChange }) => {
   const tabs = [
     { id: 'companion', label: 'Companion', icon: <PawPrint size={20} /> },
     { id: 'journal', label: 'Magic Journal', icon: <BookOpen size={20} /> },
+    { id: 'chat', label: 'Chat', icon: <MessageCircle size={20} /> },
     { id: 'analytics', label: 'Analytics', icon: <Activity size={20} /> },
     { id: 'resources', label: 'Resources', icon: <HeartHandshake size={20} /> },
   ] as const;

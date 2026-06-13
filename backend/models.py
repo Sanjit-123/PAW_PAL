@@ -1,4 +1,5 @@
-from sqlalchemy import Column, Integer, String, Text, DateTime
+from sqlalchemy import Column, Integer, String, Text, DateTime, ForeignKey
+from sqlalchemy.sql import func
 from database import Base
 import datetime
 
@@ -23,3 +24,18 @@ class JournalEntry(Base):
     sentiment = Column(String) # positive, neutral, negative
     stress_score = Column(Integer) # 0-100
     stress_level = Column(String) # Low, Moderate, High
+
+class ChatMessage(Base):
+    __tablename__ = "chat_messages"
+
+    id = Column(Integer, primary_key=True, index=True)
+    user_id = Column(Integer, ForeignKey("users.id"))
+    sender = Column(String) # "user" or "bot"
+    text = Column(String)
+    timestamp = Column(DateTime(timezone=True), server_default=func.now())
+    # Analytics data (only populated for user messages, null for bot)
+    sentiment = Column(String, nullable=True) 
+    stress_score = Column(Integer, nullable=True)
+    stress_level = Column(String, nullable=True)
+    action = Column(String, nullable=True)
+    expression = Column(String, nullable=True)

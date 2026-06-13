@@ -19,15 +19,36 @@ export const MoodAnalytics: React.FC = () => {
   useEffect(() => {
     const fetchHistory = async () => {
       try {
-        const response = await fetch('http://localhost:8000/api/journal/history');
-        if (response.ok) {
-          const data: JournalEntry[] = await response.json();
-          // Sort ascending for the chart
-          const sorted = data.sort((a, b) => new Date(a.timestamp).getTime() - new Date(b.timestamp).getTime());
-          setHistory(sorted);
+        const [journalRes, chatRes] = await Promise.all([
+          fetch('http://localhost:8000/api/journal/history'),
+          fetch('http://localhost:8000/api/chat/history')
+        ]);
+        
+        let allData: JournalEntry[] = [];
+        if (journalRes.ok) {
+          allData = await journalRes.json();
         }
+        if (chatRes.ok) {
+          const chatData = await chatRes.json();
+          // Filter to only user messages with stress scores
+          const chatEntries = chatData
+            .filter((msg: any) => msg.sender === 'user' && msg.stress_score !== null)
+            .map((msg: any) => ({
+              id: msg.id + 10000, // offset id to avoid collisions
+              entry_text: msg.text,
+              timestamp: msg.timestamp,
+              sentiment: msg.sentiment,
+              stress_score: msg.stress_score,
+              stress_level: msg.stress_level
+            }));
+          allData = [...allData, ...chatEntries];
+        }
+
+        // Sort ascending for the chart
+        const sorted = allData.sort((a, b) => new Date(a.timestamp).getTime() - new Date(b.timestamp).getTime());
+        setHistory(sorted);
       } catch (e) {
-        console.error("Failed to fetch history", e);
+        console.error("Failed to fetch unified history", e);
       }
     };
     fetchHistory();
@@ -44,7 +65,7 @@ export const MoodAnalytics: React.FC = () => {
       <FurCard style={{ marginTop: '2rem' }}>
         <div style={{ textAlign: 'center', opacity: 0.6 }}>
           <Activity size={32} />
-          <p>No mood data yet! Start journaling to see your trends.</p>
+          <p>No mood data yet! Start journaling or chatting to see your trends.</p>
         </div>
       </FurCard>
     );

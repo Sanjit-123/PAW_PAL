@@ -3,6 +3,7 @@ import { PawPointsProvider, usePawPoints } from './context/PawPointsContext';
 import { FurCard } from './components/ui/FurCard';
 import { Dog2D } from './components/scene/Dog2D';
 import { JournalBook } from './components/journal/JournalBook';
+import { ChatBot } from './components/chat/ChatBot';
 import { MoodAnalytics } from './components/analytics/MoodAnalytics';
 import { Resources } from './components/analytics/Resources';
 import { Navbar } from './components/ui/Navbar';
@@ -73,6 +74,12 @@ const Dashboard: React.FC = () => {
         {activeTab === 'journal' && (
           <div style={{ width: '100%', display: 'flex', justifyContent: 'center', alignItems: 'center', minHeight: '60vh' }}>
             <JournalBook />
+          </div>
+        )}
+
+        {activeTab === 'chat' && (
+          <div style={{ width: '100%', maxWidth: '800px', display: 'flex', justifyContent: 'center' }}>
+            <ChatBot />
           </div>
         )}
 

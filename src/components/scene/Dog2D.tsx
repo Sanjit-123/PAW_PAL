@@ -2,7 +2,12 @@ import React, { useState } from 'react';
 import { useSpring, animated, config } from '@react-spring/web';
 import { usePawPoints } from '../../context/PawPointsContext';
 
-export const Dog2D: React.FC = () => {
+interface DogProps {
+  expression?: string; // 'happy', 'sad', 'curious', 'sleepy', 'normal'
+  action?: string;     // 'tail_wag', 'head_tilt', 'ears_down', 'excited_jump'
+}
+
+export const Dog2D: React.FC<DogProps> = ({ expression = 'normal', action = 'tail_wag' }) => {
   const [isHovered, setIsHovered] = useState(false);
   const { userData } = usePawPoints();
   const points = userData.paw_points;
@@ -23,22 +28,51 @@ export const Dog2D: React.FC = () => {
     config: { duration: 1500 },
   });
 
-  // Tail wagging animation on hover
+  // Tail wagging animation on hover or action
+  const isWagging = isHovered || action === 'tail_wag' || action === 'excited_jump';
   const { rotateZ } = useSpring({
-    rotateZ: isHovered ? 20 : 0,
-    loop: isHovered,
+    rotateZ: isWagging ? 20 : 0,
+    loop: isWagging,
     config: config.wobbly,
   });
 
-  // Ear twitching
-  const { rotateEar } = useSpring({
-    rotateEar: isHovered ? -15 : 0,
+  // Ear twitching / posture
+  const isEarsDown = action === 'ears_down' || expression === 'sad' || expression === 'sleepy';
+  const isOneEarUp = expression === 'curious' && !isHovered;
+  
+  const { rotateEarLeft, rotateEarRight } = useSpring({
+    rotateEarLeft: isEarsDown ? 20 : (isOneEarUp ? -30 : (isHovered ? -15 : 0)),
+    rotateEarRight: isEarsDown ? -20 : (isHovered ? -15 : 0),
     config: config.stiff,
   });
 
+  // Head tilt
+  const { rotateHead } = useSpring({
+    rotateHead: action === 'head_tilt' ? 15 : 0,
+    config: config.wobbly,
+  });
+
+  // Excited Jump
+  const isJumping = action === 'excited_jump';
+  const { translateY } = useSpring({
+    translateY: isJumping ? -20 : 0,
+    loop: isJumping ? { reverse: true } : false,
+    config: { tension: 300, friction: 10 },
+  });
+
+  // Expressions styling
+  const isSad = expression === 'sad';
+  const isSleepy = expression === 'sleepy';
+  const eyeStyle = isSleepy ? { height: '3px', borderRadius: '2px', top: '40px' } : { height: '12px', borderRadius: '50%', top: '35px' };
+  const mouthStyle = isSad 
+    ? { borderTop: '3px solid #333', borderBottom: 'none', borderRadius: '15px 15px 0 0', top: '70px' }
+    : (isSleepy 
+        ? { borderBottom: '3px solid #333', height: '0px', top: '70px', borderRadius: '0' }
+        : { borderBottom: '3px solid #333', borderRadius: '0 0 15px 15px', height: '15px', top: '65px' });
+
   return (
-    <div 
-      style={{ position: 'relative', width: '200px', height: '200px', cursor: 'pointer', marginTop: hasBed ? '20px' : '0' }}
+    <animated.div 
+      style={{ position: 'relative', width: '200px', height: '200px', cursor: 'pointer', marginTop: hasBed ? '20px' : '0', transform: translateY.to(y => `translateY(${y}px)`) }}
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
     >
@@ -109,7 +143,9 @@ export const Dog2D: React.FC = () => {
         height: '100px',
         background: '#e0b896',
         borderRadius: '60px',
-        boxShadow: '0 5px 15px rgba(0,0,0,0.05)'
+        boxShadow: '0 5px 15px rgba(0,0,0,0.05)',
+        transformOrigin: 'bottom center',
+        transform: rotateHead.to(r => `rotateZ(${r}deg)`)
       }}>
         {/* Left Ear */}
         <animated.div style={{
@@ -121,7 +157,7 @@ export const Dog2D: React.FC = () => {
           background: '#c59d7b',
           borderRadius: '15px',
           transformOrigin: 'top right',
-          transform: rotateEar.to(r => `rotateZ(${r}deg)`)
+          transform: rotateEarLeft.to(r => `rotateZ(${r}deg)`)
         }} />
 
         {/* Right Ear */}
@@ -134,22 +170,22 @@ export const Dog2D: React.FC = () => {
           background: '#c59d7b',
           borderRadius: '15px',
           transformOrigin: 'top left',
-          transform: rotateEar.to(r => `rotateZ(${-r}deg)`)
+          transform: rotateEarRight.to(r => `rotateZ(${r}deg)`)
         }} />
 
         {/* Eyes */}
-        <div style={{ position: 'absolute', top: '35px', left: '30px', width: '12px', height: '12px', background: '#333', borderRadius: '50%' }} />
-        <div style={{ position: 'absolute', top: '35px', right: '30px', width: '12px', height: '12px', background: '#333', borderRadius: '50%' }} />
+        <animated.div style={{ position: 'absolute', left: '30px', width: '12px', background: '#333', ...eyeStyle }} />
+        <animated.div style={{ position: 'absolute', right: '30px', width: '12px', background: '#333', ...eyeStyle }} />
 
         {/* Nose */}
         <div style={{ position: 'absolute', top: '55px', left: '50px', width: '20px', height: '15px', background: '#444', borderRadius: '10px' }} />
         
         {/* Smile / Mouth */}
-        <div style={{ 
-          position: 'absolute', top: '65px', left: '45px', width: '30px', height: '15px', 
-          borderBottom: '3px solid #333', borderRadius: '0 0 15px 15px' 
+        <animated.div style={{ 
+          position: 'absolute', left: '45px', width: '30px', 
+          ...mouthStyle
         }} />
       </animated.div>
-    </div>
+    </animated.div>
   );
 };
