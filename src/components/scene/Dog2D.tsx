@@ -77,18 +77,18 @@ export const Dog2D: React.FC<DogProps> = ({ expression = 'normal', action = 'tai
   const isShivering = action === 'shiver' || expression === 'anxious';
 
   const { bodyTranslateY, bodyScaleY, bodyTranslateX, bodyRotateZ } = useSpring({
-    bodyTranslateY: isJumping ? -30 : (isLieDown ? 20 : (isBellyRub ? 40 : 0)),
-    bodyScaleY: isLieDown ? 0.7 : (isPanting ? 1.05 : (isBellyRub ? 0.9 : 1)),
+    bodyTranslateY: isJumping ? -30 : (isLieDown ? 20 : (isBellyRub ? 5 : 0)),
+    bodyScaleY: isLieDown ? 0.7 : (isPanting ? 1.05 : (isBellyRub ? 0.92 : 1)),
     bodyTranslateX: isShivering ? -3 : 0,
-    bodyRotateZ: isSpinning ? 360 : (isBellyRub ? 180 : 0),
+    bodyRotateZ: isSpinning ? 360 : 0,
     loop: isJumping || isShivering || isPanting ? { reverse: true } : (isSpinning ? true : false),
     config: isShivering ? { tension: 800, friction: 10 } : config.wobbly,
   });
 
   const { bellyRubWobble } = useSpring({
-    bellyRubWobble: isBellyRub ? 15 : 0,
+    bellyRubWobble: isBellyRub ? 8 : 0,
     loop: isBellyRub ? { reverse: true } : false,
-    config: { tension: 400, friction: 10 },
+    config: { tension: 500, friction: 5 },
   });
 
   // --- Expressions Styling ---
