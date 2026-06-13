@@ -94,7 +94,7 @@ export const ChatBot: React.FC = () => {
   const currentAction = gameAction || latestBotMsg?.action || 'tail_wag';
 
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', width: '100%', alignItems: 'center', paddingTop: '100px' }}>
+    <div style={{ display: 'flex', flexDirection: 'column', width: '100%', alignItems: 'center', paddingTop: '160px' }}>
       
       <div style={{ display: 'flex', gap: '2rem', width: '100%', alignItems: 'stretch' }}>
         
@@ -104,16 +104,16 @@ export const ChatBot: React.FC = () => {
           {/* Peeking PawPal */}
           <div style={{ 
             position: 'absolute', 
-            top: '-140px', 
-            left: '30%', 
+            top: '-150px', 
+            left: '50%', 
             transform: 'translateX(-50%) scale(1.1)', 
-            zIndex: 50,
+            zIndex: 5,
             pointerEvents: 'auto'
           }}>
             <Dog2D expression={currentExpression} action={currentAction} />
           </div>
 
-          <FurCard style={{ width: '100%', height: '70vh', display: 'flex', flexDirection: 'column', padding: 0, overflow: 'hidden', position: 'relative', zIndex: 10 }}>
+          <FurCard style={{ width: '100%', height: '65vh', display: 'flex', flexDirection: 'column', padding: 0, overflow: 'hidden', position: 'relative', zIndex: 10 }}>
             {/* Header */}
             <div style={{ padding: '1.5rem', borderBottom: '1px solid rgba(0,0,0,0.05)', display: 'flex', alignItems: 'center', gap: '10px', background: '#ff9eb5', color: 'white' }}>
               <PawPrint size={24} />
