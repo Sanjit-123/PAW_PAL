@@ -13,9 +13,9 @@
   --accent-green: #d1ead1;
   --accent-yellow: #fff3b0;
 
-  --fur-bg: #ffffff;
+  --fur-bg: rgba(255, 255, 255, 0.6);
   --fur-shadow: rgba(0, 0, 0, 0.05);
-  --fur-border: rgba(92, 78, 78, 0.1);
+  --fur-border: rgba(255, 255, 255, 0.8);
 }
 
 * {
@@ -60,8 +60,9 @@ body {
   /* Organic border radius for a soft, furry/pillowy feel */
   border-radius: 40px 30px 40px 35px / 35px 40px 30px 40px;
   border: 2px solid var(--fur-border);
-  box-shadow: 0 8px 32px var(--fur-shadow), inset 0 0 10px rgba(255, 255, 255, 0.5);
-  backdrop-filter: blur(10px);
+  box-shadow: 0 8px 32px var(--fur-shadow), inset 0 0 15px rgba(255, 255, 255, 0.6);
+  backdrop-filter: blur(15px);
+  -webkit-backdrop-filter: blur(15px);
   padding: 1.5rem;
   transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
 }

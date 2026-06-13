@@ -60,7 +60,7 @@ const Dashboard: React.FC = () => {
       flexDirection: 'column',
       height: '100vh',
       overflowY: 'auto',
-      backgroundColor: 'var(--bg-color)'
+      backgroundColor: 'transparent'
     }}>
       <Navbar activeTab={activeTab} onTabChange={setActiveTab} />
 
