@@ -1,8 +1,8 @@
 import React from 'react';
-import { PawPrint, BookOpen, Activity, HeartHandshake, MessageCircle, ChevronDown } from 'lucide-react';
+import { Home, Book, MessageSquare, PieChart, Info, Mail, ChevronDown } from 'lucide-react';
 import { usePawPoints } from '../../context/PawPointsContext';
 
-export type TabType = 'companion' | 'journal' | 'chat' | 'analytics' | 'resources';
+export type TabType = 'companion' | 'journal' | 'chat' | 'analytics' | 'resources' | 'letters';
 
 interface NavbarProps {
   activeTab: TabType;
@@ -11,11 +11,12 @@ interface NavbarProps {
 
 export const Navbar: React.FC<NavbarProps> = ({ activeTab, onTabChange }) => {
   const tabs = [
-    { id: 'companion', label: 'Companion', icon: <PawPrint size={20} /> },
-    { id: 'journal', label: 'Magic Journal', icon: <BookOpen size={20} /> },
-    { id: 'chat', label: 'Chat', icon: <MessageCircle size={20} /> },
-    { id: 'analytics', label: 'Analytics', icon: <Activity size={20} /> },
-    { id: 'resources', label: 'Resources', icon: <HeartHandshake size={20} /> },
+    { id: 'companion', label: 'My Pal', icon: <Home size={20} /> },
+    { id: 'journal', label: 'Magic Journal', icon: <Book size={20} /> },
+    { id: 'letters', label: 'Letters', icon: <Mail size={20} /> },
+    { id: 'chat', label: 'Chat', icon: <MessageSquare size={20} /> },
+    { id: 'analytics', label: 'Analytics', icon: <PieChart size={20} /> },
+    { id: 'resources', label: 'Resources', icon: <Info size={20} /> },
   ] as const;
 
   const { userData } = usePawPoints();

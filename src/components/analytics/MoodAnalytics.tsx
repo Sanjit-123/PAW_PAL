@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { AreaChart, Area, XAxis, YAxis, Tooltip, ResponsiveContainer } from 'recharts';
 import { format } from 'date-fns';
 import { FurCard } from '../ui/FurCard';
-import { Activity } from 'lucide-react';
+import { Activity, BrainCircuit } from 'lucide-react';
 
 interface JournalEntry {
   id: number;
@@ -15,14 +15,23 @@ interface JournalEntry {
 
 export const MoodAnalytics: React.FC = () => {
   const [history, setHistory] = useState<JournalEntry[]>([]);
+  const [themes, setThemes] = useState<any[]>([]);
+  const [loadingThemes, setLoadingThemes] = useState(true);
 
   useEffect(() => {
     const fetchHistory = async () => {
       try {
-        const [journalRes, chatRes] = await Promise.all([
+        const [journalRes, chatRes, themesRes] = await Promise.all([
           fetch('http://localhost:8000/api/journal/history'),
-          fetch('http://localhost:8000/api/chat/history')
+          fetch('http://localhost:8000/api/chat/history'),
+          fetch('http://localhost:8000/api/analytics/themes').catch(() => null)
         ]);
+        
+        if (themesRes && themesRes.ok) {
+          const themesData = await themesRes.json();
+          setThemes(themesData.themes || []);
+        }
+        setLoadingThemes(false);
         
         let allData: JournalEntry[] = [];
         if (journalRes.ok) {
@@ -111,6 +120,39 @@ export const MoodAnalytics: React.FC = () => {
             </span>
           </div>
         ))}
+      </div>
+
+      {/* AI Semantic Insights from Vector DB */}
+      <div style={{ marginTop: '2rem' }}>
+        <h4 style={{ marginBottom: '1rem', display: 'flex', alignItems: 'center', gap: '8px', color: 'var(--primary-hover)' }}>
+          <BrainCircuit size={20} /> AI Semantic Insights
+        </h4>
+        {loadingThemes ? (
+          <div style={{ textAlign: 'center', opacity: 0.5, padding: '1rem' }}>Analyzing journal patterns...</div>
+        ) : themes.length === 0 ? (
+          <div style={{ textAlign: 'center', opacity: 0.5, padding: '1rem' }}>Write more journals to uncover recurring themes!</div>
+        ) : (
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+            {themes.map((theme, idx) => (
+              <div key={idx} style={{ background: 'rgba(255,255,255,0.6)', padding: '1rem', borderRadius: '15px', border: '1px solid rgba(0,0,0,0.05)' }}>
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.5rem' }}>
+                  <strong style={{ fontSize: '1.1rem', color: '#5c4e4e' }}>{theme.topic}</strong>
+                  <span style={{ 
+                    fontSize: '0.8rem', 
+                    padding: '0.2rem 0.6rem', 
+                    borderRadius: '10px', 
+                    backgroundColor: theme.stress_association === 'High' ? '#ff6b6b' : theme.stress_association === 'Moderate' ? '#feca57' : '#d1ead1',
+                    color: theme.stress_association === 'Moderate' ? '#333' : 'white',
+                    fontWeight: 'bold'
+                  }}>
+                    {theme.stress_association} Stress
+                  </span>
+                </div>
+                <p style={{ margin: 0, fontSize: '0.9rem', color: '#8c7e7e' }}>{theme.insight}</p>
+              </div>
+            ))}
+          </div>
+        )}
       </div>
     </FurCard>
   );

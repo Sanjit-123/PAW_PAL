@@ -40,3 +40,12 @@ class ChatMessage(Base):
     action = Column(String, nullable=True)
     expression = Column(String, nullable=True)
     reaction_emoji = Column(String, nullable=True)
+
+class PawPalLetter(Base):
+    __tablename__ = "pawpal_letters"
+
+    id = Column(Integer, primary_key=True, index=True)
+    user_id = Column(Integer, index=True)
+    content = Column(Text, nullable=False)
+    timestamp = Column(DateTime, default=datetime.datetime.utcnow)
+    read_status = Column(Integer, default=0) # 0 = unread, 1 = read

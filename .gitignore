@@ -28,3 +28,4 @@ backend/venv/
 backend/__pycache__/
 backend/pawpal.db
 backend/.env
+backend/chroma_db/

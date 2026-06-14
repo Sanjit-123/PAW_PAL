@@ -42,3 +42,12 @@ class UserResponse(BaseModel):
 
     class Config:
         from_attributes = True
+
+class PawPalLetterResponse(BaseModel):
+    id: int
+    content: str
+    timestamp: datetime
+    read_status: int
+
+    class Config:
+        from_attributes = True

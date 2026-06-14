@@ -2,10 +2,12 @@ import os
 import json
 from textblob import TextBlob
 import google.generativeai as genai
+from groq import Groq
 from dotenv import load_dotenv
 
 load_dotenv()
 genai.configure(api_key=os.getenv("GEMINI_API_KEY"))
+groq_client = Groq(api_key=os.getenv("GROQ_API_KEY"))
 
 def analyze_journal(text: str) -> dict:
     """
@@ -48,9 +50,8 @@ def analyze_journal(text: str) -> dict:
         "stress_level": stress_level
     }
 
-def generate_bot_response(user_text: str, analysis: dict, history: list = None) -> dict:
+def generate_bot_response(user_text: str, analysis: dict, history: list = None, context_journals: list[str] = None) -> dict:
     try:
-        model = genai.GenerativeModel('gemini-2.5-flash', generation_config={"response_mime_type": "application/json"})
         
         history_str = ""
         if history:
@@ -59,10 +60,18 @@ def generate_bot_response(user_text: str, analysis: dict, history: list = None) 
                 role = "User" if msg["sender"] == "user" else "PawPal"
                 history_str += f"{role}: {msg['text']}\n"
         
+        context_str = ""
+        if context_journals and len(context_journals) > 0:
+            context_str = "\nBACKGROUND MEMORY (From User's Past Journals):\n"
+            for j in context_journals:
+                context_str += f"- {j}\n"
+            context_str += "\nUse this background memory silently to inform your empathy. Do NOT explicitly say 'I read your journal'. Just weave your understanding of their past struggles/themes into your comforting response."
+
         prompt = f"""
 You are PawPal, an empathetic, comforting, and non-judgmental digital pet dog supporting a college student.
 The user's inferred current emotional state: {analysis['sentiment']}
 The user's inferred stress level: {analysis['stress_level']}
+{context_str}
 
 {history_str}
 
@@ -86,9 +95,18 @@ IMPORTANT - Map the user's emotional tone to your expression:
 
 Choose the action and expression that best fits the emotional tone of your reply, ensuring you rigorously apply the correct animation mapping.
         """
-        
-        response = model.generate_content(prompt)
-        data = json.loads(response.text)
+        chat_completion = groq_client.chat.completions.create(
+            messages=[
+                {
+                    "role": "system",
+                    "content": prompt
+                }
+            ],
+            model="llama-3.1-8b-instant",
+            response_format={"type": "json_object"},
+        )
+        response_text = chat_completion.choices[0].message.content
+        data = json.loads(response_text)
         return data
     except Exception as e:
         print(f"Gemini API Error: {e}")
@@ -98,3 +116,95 @@ Choose the action and expression that best fits the emotional tone of your reply
             "action": "tail_wag",
             "expression": "normal"
         }
+
+def generate_embedding(text: str) -> list[float]:
+    """Generates a text embedding using Gemini."""
+    try:
+        result = genai.embed_content(
+            model="models/embedding-001",
+            content=text,
+            task_type="retrieval_document",
+        )
+        return result['embedding']
+    except Exception as e:
+        print(f"Gemini Embedding Error: {e}")
+        # Return a zero vector of size 768 as fallback
+        return [0.0] * 768
+
+def synthesize_themes(documents: list[str]) -> dict:
+    """Uses Groq to summarize the recurring themes from the vector DB."""
+    if not documents:
+        return {"themes": []}
+    try:
+        docs_str = "\n".join([f"- {doc}" for doc in documents[:50]]) # Limit to latest 50 to avoid token limits
+        prompt = f"""
+        Analyze these recent journal entries from a user:
+        {docs_str}
+
+        Identify the top 1 to 3 recurring themes or topics.
+        Return valid JSON matching this schema exactly:
+        {{
+            "themes": [
+                {{
+                    "topic": "The theme name (e.g. Academics, Social Life, Sleep)",
+                    "insight": "A brief, encouraging insight about how this theme affects their mood.",
+                    "stress_association": "High, Moderate, or Low"
+                }}
+            ]
+        }}
+        """
+        chat_completion = groq_client.chat.completions.create(
+            messages=[
+                {
+                    "role": "user",
+                    "content": prompt
+                }
+            ],
+            model="llama-3.1-8b-instant",
+            response_format={"type": "json_object"},
+        )
+        response_text = chat_completion.choices[0].message.content
+        return json.loads(response_text)
+    except Exception as e:
+        print(f"Gemini Theme Synthesis Error: {e}")
+        return {"themes": []}
+
+def generate_weekly_letter(journal_entries: list[str]) -> str:
+    """Uses Groq to generate an empathetic weekly letter from PawPal based on recent journals."""
+    try:
+        # Use at most the last 30 entries for context
+        docs_str = "\n".join([f"- {doc}" for doc in journal_entries[:30]])
+        prompt = f"""
+        You are PawPal, an empathetic, deeply compassionate digital pet dog supporting a college student.
+        Your goal is to write a short "Weekly Letter" to the student based on their recent journal entries.
+
+        Recent Journal Entries:
+        {docs_str}
+
+        Instructions:
+        1. Write a warm, encouraging letter (around 3-5 sentences).
+        2. Do NOT diagnose the student or use clinical language (e.g., do not say "You have anxiety").
+        3. Acknowledge their specific struggles gently, but heavily emphasize their STRENGTHS, resilience, and positive moments.
+        4. Make them feel seen, validated, and proud of themselves.
+        5. Sign off with "Love,\\nPawPal 🐾"
+        
+        Example format:
+        Dear Friend,
+        [Letter content]
+        
+        Love,
+        PawPal 🐾
+        """
+        chat_completion = groq_client.chat.completions.create(
+            messages=[
+                {
+                    "role": "user",
+                    "content": prompt
+                }
+            ],
+            model="llama-3.1-8b-instant",
+        )
+        return chat_completion.choices[0].message.content.strip()
+    except Exception as e:
+        print(f"Gemini Letter Generation Error: {e}")
+        return "Dear Friend,\n\nI've been thinking about you this week. No matter what challenges come your way, remember that I'm always here cheering you on. I'm so proud of you.\n\nLove,\nPawPal 🐾"

@@ -6,6 +6,7 @@ import { JournalBook } from './components/journal/JournalBook';
 import { ChatBot } from './components/chat/ChatBot';
 import { MoodAnalytics } from './components/analytics/MoodAnalytics';
 import { Resources } from './components/analytics/Resources';
+import { LettersView } from './components/letters/LettersView';
 import { Navbar } from './components/ui/Navbar';
 import type { TabType } from './components/ui/Navbar';
 import { Sparkles, Activity } from 'lucide-react';
@@ -91,6 +92,12 @@ const Dashboard: React.FC = () => {
         {activeTab === 'analytics' && (
           <div style={{ width: '100%', maxWidth: '800px', display: 'flex', justifyContent: 'center' }}>
             <MoodAnalytics />
+          </div>
+        )}
+
+        {activeTab === 'letters' && (
+          <div style={{ width: '100%', display: 'flex', justifyContent: 'center', alignItems: 'center', minHeight: '70vh' }}>
+            <LettersView />
           </div>
         )}
 
